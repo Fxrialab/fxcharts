@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("fxrialab.controls.charts.DoughnutCharts")]
+	</fx:Metadata>
+	
+	<s:filters>
+		<s:DropShadowFilter distance="2" angle="360" color="0x000000" alpha="0.4" blurX="4" blurY="1.5" quality="5" />
+	</s:filters>
+	
+	<mx:UIComponent id="doughnutHolder"/>
+	
+</s:Skin>

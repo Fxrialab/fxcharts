@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx"
+		width="100%" height="100%">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("fxrialab.controls.charts.CoordinateAxis")]
+	</fx:Metadata>
+	
+	<fx:Script>
+		<![CDATA[	
+			import flash.text.TextField;
+				
+			private var sumValue:int = 0;
+			private var data:Object;
+			private var numberLineLandMark:Number = 10;
+			private var marginTop:Number = 30;
+			private var marginRight:Number = 10;
+			private var marginBottom:Number = 10;
+			private var marginLeft:Number = 10;
+
+			override protected function updateDisplayList(w:Number, h:Number):void {
+				super.updateDisplayList(w, h);
+
+				//get height of horizontal axis
+				//trace(hostComponent.dataProvider);
+				for(var i:uint = 0; i < hostComponent.dataProvider.length; i++) {
+					data = hostComponent.dataProvider.getItemAt(i);
+					sumValue += data[hostComponent.valueField];
+				} 
+				//set text format for label field
+				var horizontalFormat:TextFormat = new TextFormat();
+				horizontalFormat.size = getStyle('size');
+				horizontalFormat.font = getStyle('font');
+				horizontalFormat.align = getStyle('rightAlign');
+				
+				var verticalFormat:TextFormat = new TextFormat();
+				verticalFormat.size = getStyle('size');
+				verticalFormat.font = getStyle('font');
+				verticalFormat.align = getStyle('leftAlign');
+				
+				var titleFormat:TextFormat = new TextFormat();
+				titleFormat.size = getStyle('titleSize');
+				titleFormat.font = getStyle('titleFont');
+				titleFormat.align = getStyle('titleAlign');
+				
+				var titleLabel:TextField = new TextField();
+				titleLabel.text = String(hostComponent.title);
+				titleLabel.x = 0;
+				titleLabel.y = 0;
+				titleLabel.width = w;
+				
+				titleLabel.setTextFormat(titleFormat);
+				displayLabel.addChild(titleLabel);
+
+				if(hostComponent.orientation == "horizontal"){
+					//draw horizontal axis				
+					graphics.clear();
+					graphics.lineStyle(2, 0xDADADA);
+					graphics.moveTo(marginLeft, h - marginBottom);
+					graphics.lineTo(marginLeft, h - (sumValue + marginBottom));
+					//draw vertical axis
+					graphics.moveTo(marginLeft-2, h - marginBottom);
+					graphics.lineTo(w - marginRight + 2, h - marginBottom);
+					//draw percent axis
+					graphics.moveTo(w - marginRight, h - marginBottom);
+					graphics.lineTo(w - marginRight, h - (sumValue + marginBottom));
+					
+					//draw landmark gap for coordinate axis
+					for (var j:uint = 1; j <= numberLineLandMark; j++) {
+						graphics.moveTo(marginLeft-2, h - marginBottom - (sumValue/numberLineLandMark * j));
+						graphics.lineTo(w - marginRight + 2, h - marginBottom - (sumValue/numberLineLandMark * j));
+					}
+
+					//draw label left value and right percent
+					for (var k:int = 0; k <= numberLineLandMark; k++) {
+						var leftValue:TextField = new TextField();
+						leftValue.text = String(Math.ceil(sumValue/numberLineLandMark * k));
+						leftValue.x = - 7;
+						leftValue.y = h - (sumValue/numberLineLandMark * k) - (marginBottom+5);
+						leftValue.width = 15;
+						leftValue.setTextFormat(horizontalFormat);
+						displayLabel.addChild(leftValue);
+						
+						var rightPercent:TextField = new TextField();
+						rightPercent.text = String(Math.ceil(100 / numberLineLandMark) * k) + "%";
+						rightPercent.x = w - marginRight + 3;
+						rightPercent.y = h - (sumValue/numberLineLandMark * k) - (marginBottom+5);
+						rightPercent.wordWrap = true;
+						
+						rightPercent.setTextFormat(verticalFormat);
+						displayLabel.addChild(rightPercent);
+					}
+				}else{
+					graphics.clear();
+					graphics.lineStyle(2, 0xDADADA);
+					//draw vertical axis
+					graphics.moveTo(1 + marginLeft, marginTop);
+					graphics.lineTo(1 + marginLeft + sumValue, marginTop);
+					//draw horizontal axis
+					graphics.moveTo(1 + marginLeft, marginTop);
+					graphics.lineTo(1 + marginLeft, h - marginBottom + 2);
+					//draw value axis
+					graphics.moveTo(1 + marginLeft, h - marginBottom);
+					graphics.lineTo(1 + marginLeft + sumValue, h - marginBottom);
+					//draw landmark gap for coordinate axis
+					for (j= 1; j <= numberLineLandMark; j++) {
+						graphics.moveTo(1 + marginLeft + (sumValue/numberLineLandMark * j), marginTop);
+						graphics.lineTo(1 + marginLeft + (sumValue/numberLineLandMark * j), h - marginBottom + 2);
+					}
+					
+					//draw label left value and right percent
+					for (k = 0; k <= numberLineLandMark; k++) {
+						/* var topPercent:TextField = new TextField();
+						topPercent.text = String(Math.ceil(100 / numberLineLandMark) * k) + "%";
+						topPercent.x = marginLeft + (sumValue/numberLineLandMark * k) - 3;
+						topPercent.y = marginTop - 10;
+						
+						topPercent.setTextFormat(verticalFormat);
+						displayLabel.addChild(topPercent); */
+						
+						var bottomValue:TextField  = new TextField();
+						bottomValue.text = String(Math.ceil(sumValue/numberLineLandMark * k));
+						bottomValue.x = marginLeft + (sumValue/numberLineLandMark * k) - 3;
+						bottomValue.y = h - marginBottom + 2;
+						
+						bottomValue.setTextFormat(verticalFormat);
+						displayLabel.addChild(bottomValue);
+					}
+				}
+			}
+		]]>
+	</fx:Script>
+	<mx:UIComponent id="displayLabel" />
+</s:Skin>
