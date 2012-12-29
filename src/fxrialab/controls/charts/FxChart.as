@@ -9,7 +9,7 @@ package fxrialab.controls.charts
 	import mx.managers.ILayoutManagerClient;
 	import mx.messaging.AbstractConsumer;
 	
-	[Style(name="coordinateClass", inherit="no", type="Class")]
+	[Style(name="coordinateClass",inherit="no",type="Class")]
 	
 	public class FxChart extends UIComponent
 	{
@@ -33,6 +33,12 @@ package fxrialab.controls.charts
 		private var _gap:Number = 10;
 		private var _offSet:Number = 10;
 		private var _title:String;
+		private var _marginTop:Number = 30;
+		private var _marginRight:Number = 10;
+		private var _marginBottom:Number = 10;
+		private var _marginLeft:Number = 10;
+		private var getMax:Array = [];
+		
 		private var char:Array = [];
 		private var chart:DisplayObject;
 		
@@ -41,34 +47,49 @@ package fxrialab.controls.charts
 			super();
 			setStyle('coordinateClass', CoordinateAxis);
 		}
-
+		
 		public function get dataProvider():IList
 		{
 			return _dataProvider;
 		}
-
+		
+		public var arrays:Array = [];
+		
 		public function set dataProvider(value:IList):void
 		{
-			if(value == _dataProvider) return;
+			if (value == _dataProvider)
+				return;
 			
 			_dataProvider = value;
 			redrawSkin = true;
 			invalidateProperties();
 			
-			for(var i:int=0; i < dataProvider.length; i++){
+			for (var i:int = 0; i < dataProvider.length; i++)
+			{
 				var type:String = (dataProvider.getItemAt(i) as Object)[typeField];
 				var stroke:String = (dataProvider.getItemAt(i) as Object)[strokeField];
 				var data:Object = (dataProvider.getItemAt(i) as Object)[_dataSeriesField];
 				charts.addItem( { type: type, stroke: stroke, data: data } );
+				//get min, max for arrays
+				var dataItemsChart:Object = dataProvider.getItemAt(i);
+				
+				var itemsData:IList = new ArrayList(dataItemsChart[_dataSeriesField] as Array);
+
+				var calc:int = 0;
+				for (var k:int = 0; k < itemsData.length; k++) {
+					var daa:Object = itemsData.getItemAt(k);
+					calc += daa[valueField];
+				}
+				arrays.push(calc);
 			}
-			
 		}
 		
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
 			
-			for(var i:int=0; i < charts.length; i++){
+			for (var i:int = 0; i < charts.length; i++)
+			{
 				var chartDataItem:Object = charts.getItemAt(i);
 				var chartType:String = String(chartDataItem[typeField]);
 				var dataItems:IList = new ArrayList(chartDataItem[_dataSeriesField] as Array);
@@ -77,58 +98,61 @@ package fxrialab.controls.charts
 				var chartFirstType:String = String(chartFirstDataItem[typeField]);
 				var firstDataItems:IList = new ArrayList(chartFirstDataItem[_dataSeriesField] as Array);
 				
-				var maxSum:int = 0;
-				for (var j:int = 0; j < firstDataItems.length; j++) {
-					var getValue:Object = firstDataItems.getItemAt(j);
-					maxSum += getValue[valueField];
-				}
-				//trace("Max:", maxSum);
-				var calcSum:int = 0;
-				for (j = 0; j < dataItems.length; j++) {
+				/*var calcSum:int=0;
+				for (var j:int = 0; j < dataItems.length; j++)
+				{
 					var data1:Object = dataItems.getItemAt(j);
 					calcSum += data1[valueField];
-					if (calcSum > maxSum) {
-						maxSum = calcSum;
-					}
 				}
-				//trace("calculateSum:", calcSum);
-				
-				
-				//trace("finally Max:", maxSum);
-
+				arrays.push(calcSum);
+				trace("finally Max:", findMax(arrays) );*/
 				//draw axis 
-				if(i == 0){
-					if(chartFirstType == HORIZONTAL_BAR || chartFirstType == VERTICAL_BAR || chartFirstType == LINE){
+				if (i == 0)
+				{
+					if (chartFirstType == HORIZONTAL_BAR || chartFirstType == VERTICAL_BAR || chartFirstType == LINE)
+					{
 						//draw axis ?
 						showCoordinate = true;
-						if(showCoordinate){
+						if (showCoordinate)
+						{
 							var orientation:String = "horizontal";
-							if(chartFirstType == HORIZONTAL_BAR){
+							if (chartFirstType == HORIZONTAL_BAR)
+							{
 								//draw hor axis
 								orientation = "horizontal";
 							}
-							else if(chartFirstType == VERTICAL_BAR){
+							else if (chartFirstType == VERTICAL_BAR)
+							{
 								//draw ver axis
 								orientation = "vertical";
 							}
-							else if(chartFirstType == LINE){
+							else if (chartFirstType == LINE)
+							{
 								//check for next chart type
-								if(chartType == HORIZONTAL_BAR){
+								if (chartType == HORIZONTAL_BAR)
+								{
 									orientation == "horizontal";
-								}else if(chartType == VERTICAL_BAR){
+								}
+								else if (chartType == VERTICAL_BAR)
+								{
 									orientation == "vertical";
 								}
 							}
 							
-							if(!coordinateAxis){
+							if (!coordinateAxis)
+							{
 								var clazz:Class = getStyle('coordinateClass') as Class;
 								coordinateAxis = new clazz() as DisplayObject;
-								if(dataProvider){
+								if (dataProvider)
+								{
 									coordinateAxis["dataProvider"] = dataItems;
-									
-									//trace("max Sum111:", maxSum);
+									coordinateAxis["maxSum"] = findMax(arrays);
 								}
 								coordinateAxis["title"] = title;
+								coordinateAxis['marginTop'] = marginTop;
+								coordinateAxis['marginRight'] = marginRight;
+								coordinateAxis['marginBottom'] = marginBottom;
+								coordinateAxis['marginLeft'] = marginLeft;
 								
 								addChild(coordinateAxis);
 								coordinateAxis['orientation'] = orientation;
@@ -138,99 +162,110 @@ package fxrialab.controls.charts
 					}
 				}
 				
-				
 				//draw charts
 				var chart:DisplayObject = generateChart(chartDataItem);
-				if(chart is LineChart){
+				if (chart is LineChart)
+				{
 					(chart as LineChart).direction = orientation;
 				}
-				if(i==0)
+				if (i == 0)
 					addChild(chart);
-				else{
-					if(chartFirstType == HORIZONTAL_BAR || chartFirstType == LINE){
-						if(chartType == HORIZONTAL_BAR || chartType == LINE){
-							addChild(chart);		
-						}	
-					}else if(chartFirstType == VERTICAL_BAR || chartFirstType == LINE){
-						if(chartType == VERTICAL_BAR || chartType == LINE){
-							addChild(chart);		
+				else
+				{
+					if (chartFirstType == HORIZONTAL_BAR || chartFirstType == LINE)
+					{
+						if (chartType == HORIZONTAL_BAR || chartType == LINE)
+						{
+							addChild(chart);
+						}
+					}
+					else if (chartFirstType == VERTICAL_BAR || chartFirstType == LINE)
+					{
+						if (chartType == VERTICAL_BAR || chartType == LINE)
+						{
+							addChild(chart);
 						}
 						
-					}else if(chartFirstType == PIE && chartType == PIE){
-						addChild(chart);	
-					}					
+					}
+					else if (chartFirstType == PIE && chartType == PIE)
+					{
+						addChild(chart);
+					}
 				}
 				
 			}
-			
+		
 		}
 		
-		protected function max(data:IList):Number {
+		protected function findMax(arrays:Array):Number
+		{
 			
-			var maxSum:int = 0;
-			var calcSum:int = 0;
-			for(var i:int=0; i < data.length; i++){
-				var getData:Object = data.getItemAt(i);
-				var dataItems:IList = new ArrayList(getData[_dataSeriesField] as Array);
-				
-				var getFirstData:Object = data.getItemAt(0);
-				var firstDataItems:IList = new ArrayList(getFirstData[_dataSeriesField] as Array);
-			
-				
-				for(var j:int=0; j < firstDataItems.length; j++){
-					var max:Object = firstDataItems.getItemAt(j);
-					maxSum += max[valueField];
+			var max:Number;
+			max = arrays[0];
+			for (var i:int = 0; i < arrays.length; i ++) {
+				if (arrays[i] > max) {
+					max = arrays[i];
 				}
-				
-				for(j=0; j < dataItems.length; j++){
-					var calc:Object = dataItems.getItemAt(j);
-					calcSum += calc[valueField];
-					//trace(calcSum);
-				}
-				
-				if(calcSum > maxSum){
-					maxSum = calcSum;
-				}
-				
 			}
-			
-			return maxSum;
+			return max;
 		}
 		
-		protected function generateChart(data:Object):DisplayObject{
+		protected function generateChart(data:Object):DisplayObject
+		{
 			var chartType:String = String(data[typeField]);
 			var dataItems:IList = new ArrayList(data[_dataSeriesField] as Array);
 			
-			switch(chartType){
-				case VERTICAL_BAR:
+			switch (chartType)
+			{
+				case VERTICAL_BAR: 
 					chart = new VBarChart();
 					(chart as VBarChart).dataProvider = dataItems;
 					(chart as VBarChart).gap = gap;
 					(chart as VBarChart).offSet = offSet;
+					(chart as VBarChart).marginTop = marginTop;
+					(chart as VBarChart).marginRight = marginRight;
+					(chart as VBarChart).marginBottom = marginBottom;
+					(chart as VBarChart).marginLeft = marginLeft;
 					break;
-				case HORIZONTAL_BAR:
+				case HORIZONTAL_BAR: 
 					chart = new HBarChart();
 					(chart as HBarChart).dataProvider = dataItems;
 					(chart as HBarChart).gap = gap;
 					(chart as HBarChart).offSet = offSet;
+					(chart as HBarChart).marginTop = marginTop;
+					(chart as HBarChart).marginRight = marginRight;
+					(chart as HBarChart).marginBottom = marginBottom;
+					(chart as HBarChart).marginLeft = marginLeft;
 					break;
-				case PIE:
-					chart = new PieCharts();
-					(chart as PieCharts).dataProvider = dataItems;
-					break;
-				case LINE:
+				case LINE: 
 					var getLineStroke:String = String(data[strokeField]);
-					var lineStroke:uint = (getLineStroke.search('#')==0) ? uint(getLineStroke.replace('#', '0x')) : uint(getLineStroke);
+					var lineStroke:uint = (getLineStroke.search('#') == 0) ? uint(getLineStroke.replace('#', '0x')) : uint(getLineStroke);
 					
-					chart = new LineChart();	
+					chart = new LineChart();
 					(chart as LineChart).dataProvider = dataItems;
 					(chart as LineChart).gap = gap;
 					(chart as LineChart).offSet = offSet;
+					(chart as LineChart).marginTop = marginTop;
+					(chart as LineChart).marginRight = marginRight;
+					(chart as LineChart).marginBottom = marginBottom;
+					(chart as LineChart).marginLeft = marginLeft;
 					(chart as LineChart).stroke = (lineStroke) ? lineStroke : 0x3f9b90;
 					break;
-				case DOUGHNUT:
+				case PIE: 
+					chart = new PieCharts();
+					(chart as PieCharts).dataProvider = dataItems;
+					(chart as PieCharts).marginTop = marginTop;
+					(chart as PieCharts).marginRight = marginRight;
+					(chart as PieCharts).marginBottom = marginBottom;
+					(chart as PieCharts).marginLeft = marginLeft;
+					break;
+				case DOUGHNUT: 
 					chart = new DoughnutCharts();
 					(chart as DoughnutCharts).dataProvider = dataItems;
+					(chart as DoughnutCharts).marginTop = marginTop;
+					(chart as DoughnutCharts).marginRight = marginRight;
+					(chart as DoughnutCharts).marginBottom = marginBottom;
+					(chart as DoughnutCharts).marginLeft = marginLeft;
 					break;
 			}
 			chart['labelField'] = labelField;
@@ -241,17 +276,21 @@ package fxrialab.controls.charts
 			return chart;
 		}
 		
-		override protected function updateDisplayList(w:Number, h:Number):void{
-			super.updateDisplayList(w,h);
-			if(coordinateAxis){
+		override protected function updateDisplayList(w:Number, h:Number):void
+		{
+			super.updateDisplayList(w, h);
+			if (coordinateAxis)
+			{
 				coordinateAxis.visible = showCoordinate;
 				coordinateAxis.width = w;
 				coordinateAxis.height = h;
+				
 			}
-			for(var i:int = 0; i< char.length;i++){
+			for (var i:int = 0; i < char.length; i++)
+			{
 				chart = char[i] as DisplayObject;
 				chart.width = w;
-				chart.height= h;
+				chart.height = h;
 			}
 		}
 		
@@ -259,94 +298,141 @@ package fxrialab.controls.charts
 		{
 			return _showCoordinate;
 		}
-
+		
 		public function set showCoordinate(value:Boolean):void
 		{
 			_showCoordinate = value;
 		}
-
+		
 		public function get labelField():String
 		{
 			return _labelField;
 		}
-
+		
 		public function set labelField(value:String):void
 		{
 			_labelField = value;
 		}
-
+		
 		public function get valueField():String
 		{
 			return _valueField;
 		}
-
+		
 		public function set valueField(value:String):void
 		{
 			_valueField = value;
 		}
-
+		
 		public function get typeField():String
 		{
 			return _typeField;
 		}
-
+		
 		public function set typeField(value:String):void
 		{
 			_typeField = value;
 		}
-
+		
 		public function get gap():Number
 		{
 			return _gap;
 		}
-
+		
 		public function set gap(value:Number):void
 		{
 			_gap = value;
 		}
-
+		
 		public function get offSet():Number
 		{
 			return _offSet;
 		}
-
+		
 		public function set offSet(value:Number):void
 		{
 			_offSet = value;
 		}
-
+		
 		public function get title():String
 		{
 			return _title;
 		}
-
+		
 		public function set title(value:String):void
 		{
 			_title = value;
 		}
-
+		
 		public function get fillField():String
 		{
 			return _fillField;
 		}
-
+		
 		public function set fillField(value:String):void
 		{
 			_fillField = value;
 		}
-
+		
 		public function get strokeField():String
 		{
 			return _strokeField;
 		}
-
+		
 		public function set strokeField(value:String):void
 		{
 			_strokeField = value;
 			redrawSkin = true;
 			invalidateProperties();
 		}
-
+		
+		public function get marginTop():Number 
+		{
+			return _marginTop;
+		}
+		
+		public function set marginTop(value:Number):void 
+		{
+			_marginTop = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+		
+		public function get marginRight():Number 
+		{
+			return _marginRight;
+		}
+		
+		public function set marginRight(value:Number):void 
+		{
+			_marginRight = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+		
+		public function get marginBottom():Number 
+		{
+			return _marginBottom;
+		}
+		
+		public function set marginBottom(value:Number):void 
+		{
+			_marginBottom = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+		
+		public function get marginLeft():Number 
+		{
+			return _marginLeft;
+		}
+		
+		public function set marginLeft(value:Number):void 
+		{
+			_marginLeft = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
 		
 	}
 }

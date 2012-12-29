@@ -24,6 +24,10 @@ package fxrialab.controls.charts
 		private var _maxSum:Number;
 		private var _title:String;
 		private var _gap:Number;
+		private var _marginTop:Number;
+		private var _marginRight:Number;
+		private var _marginBottom:Number;
+		private var _marginLeft:Number;
 		
 		public function CoordinateAxis()
 		{
@@ -51,7 +55,7 @@ package fxrialab.controls.charts
 			_dataProvider = value;
 			redrawSkin = true;
 			invalidateProperties();
-			
+
 		}
 		
 		override protected function commitProperties():void
@@ -120,7 +124,6 @@ package fxrialab.controls.charts
 			_title = value;
 			redrawSkin = true;
 			invalidateProperties()
-
 		}
 
 		public function get gap():Number
@@ -135,6 +138,52 @@ package fxrialab.controls.charts
 			invalidateProperties();
 		}
 
-			
+		public function get marginTop():Number 
+		{
+			return _marginTop;
+		}
+		
+		public function set marginTop(value:Number):void 
+		{
+			_marginTop = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+		
+		public function get marginRight():Number 
+		{
+			return _marginRight;
+		}
+		
+		public function set marginRight(value:Number):void 
+		{
+			_marginRight = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+		
+		public function get marginBottom():Number 
+		{
+			return _marginBottom;
+		}
+		
+		public function set marginBottom(value:Number):void 
+		{
+			_marginBottom = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+		
+		public function get marginLeft():Number 
+		{
+			return _marginLeft;
+		}
+		
+		public function set marginLeft(value:Number):void 
+		{
+			_marginLeft = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}	
 	}
 }

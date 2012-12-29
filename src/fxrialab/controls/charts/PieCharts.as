@@ -22,10 +22,10 @@ package fxrialab.controls.charts
 		private var _fillField:String = "fill";
 		private var _data:Object;
 		
-		private var marginTop:Number = 20;
-		private var marginRight:Number = 10;
-		private var marginBottom:Number = 10;
-		private var marginLeft:Number = 10;
+		private var _marginTop:Number;
+		private var _marginRight:Number;
+		private var _marginBottom:Number;
+		private var _marginLeft:Number;
 		
 		public var pies:Array=[];
 		public var explodeDistance:int = 10;
@@ -50,6 +50,7 @@ package fxrialab.controls.charts
 		}
 		
 		private var sumValue:int = 0;
+		private var arrays:Array = [];
 		
 		public function set dataProvider(value:IList):void
 		{
@@ -63,6 +64,7 @@ package fxrialab.controls.charts
 			for(var j:uint=0; j < dataProvider.length; j++){
 				data = dataProvider.getItemAt(j);
 				sumValue += data[valueField];
+				arrays.push(data[labelField]);
 			}
 			
 		}
@@ -117,13 +119,15 @@ package fxrialab.controls.charts
 				pie.data.startAngle = angle;
 				
 				var fill:String = (pie.getFill[fillField] == null) ? '#DC2400': pie.getFill[fillField];
-				var fillColor:String = (fill.search('#') == 0 || fill.search('#') == fill.indexOf(',')+1 || fill.search('#') == fill.indexOf(',')+2) ? fill.replace('#', '0x') : fill;
+				var fillColor:String = (fill.search('#') == 0) ? fill.replace('#', '0x') : fill;
 				pie.getFill.color = fillColor;
 				//trace(fillColor);
-				angle += pie.data[valueField] / sumValue * 360;
+				angle += (pie.data[valueField] / sumValue * 360)+0.5;
 				radius = (h - (marginTop*2 + marginBottom*2))/2
 				
 				pie.data.radius = radius;
+				pie.data.arrays = arrays;
+
 				pie.data.centerX = w/2;
 				pie.data.centerY = h/2;
 				pie.data.arcData = pie.data[valueField] / sumValue;
@@ -193,7 +197,54 @@ package fxrialab.controls.charts
 			redrawSkin = true;
 			invalidateProperties();
 		}
-
+		
+		public function get marginTop():Number 
+		{
+			return _marginTop;
+		}
+		
+		public function set marginTop(value:Number):void 
+		{
+			_marginTop = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+		
+		public function get marginRight():Number 
+		{
+			return _marginRight;
+		}
+		
+		public function set marginRight(value:Number):void 
+		{
+			_marginRight = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+		
+		public function get marginBottom():Number 
+		{
+			return _marginBottom;
+		}
+		
+		public function set marginBottom(value:Number):void 
+		{
+			_marginBottom = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+		
+		public function get marginLeft():Number 
+		{
+			return _marginLeft;
+		}
+		
+		public function set marginLeft(value:Number):void 
+		{
+			_marginLeft = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
 		
 	}
 }

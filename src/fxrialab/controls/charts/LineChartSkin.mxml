@@ -12,44 +12,34 @@
 			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 				super.updateDisplayList(unscaledWidth, unscaledHeight);
 				
-				var xMoveTo:int;
-				var yMoveTo:int;
 				var yLineTo:int;
 				var getValueForLineTo:Object;
-				var getValueForMoveTo:Object
-				var getX:Number
 				
 				//draw line
-				for (var k:int = 0; k < hostComponent.dataProvider.length - 1; k++) {
+				var getFirstValue:Number = hostComponent.dataProvider.getItemAt(0)[hostComponent.data.valueField];
+				graphics.lineStyle(1.5, hostComponent.stroke);
+				if (hostComponent.direction == "horizontal") {
+					graphics.moveTo(hostComponent.marginLeft + hostComponent.data.offSet + hostComponent.data.barWidth - hostComponent.data.barWidth / 2, hostComponent.data.height - hostComponent.marginBottom - getFirstValue);
+					
+					for (var k:int = 0; k < hostComponent.dataProvider.length - 1; k++) {
 					getValueForLineTo= hostComponent.dataProvider.getItemAt(k+1);
-					getValueForMoveTo = hostComponent.dataProvider.getItemAt(k);
-					yMoveTo = getValueForMoveTo[hostComponent.data.valueField];
 					yLineTo = getValueForLineTo[hostComponent.data.valueField];
-
-					graphics.lineStyle(1.5, hostComponent.stroke);
-					if (hostComponent.direction == "horizontal") {
-							
-					var xMoveHorizontal:Number = hostComponent.data.marginLeft + hostComponent.data.offSet + hostComponent.data.gap * k + hostComponent.data.barWidth * k + hostComponent.data.barWidth / 2;
-					
-					graphics.moveTo(xMoveHorizontal, hostComponent.data.height - hostComponent.data.marginBottom - yMoveTo);
-					
-					//yLineTo = getValueForLineTo[hostComponent.data.valueField];
+					var xMoveHorizontal:Number = hostComponent.marginLeft + hostComponent.data.offSet + hostComponent.data.gap * k + hostComponent.data.barWidth * k + hostComponent.data.barWidth / 2;
 					
 					graphics.lineTo(xMoveHorizontal + hostComponent.data.barWidth + hostComponent.data.gap, hostComponent.data.height - hostComponent.data.marginBottom - yLineTo);
-				
-					}else {
-						//yMoveTo = getValueForMoveTo[hostComponent.data.valueField];
-					
-					var yyMove:Number = hostComponent.data.height - (hostComponent.data.gap*k + hostComponent.data.barHeight*k + hostComponent.data.marginBottom + hostComponent.data.offSet + hostComponent.data.barHeight/2);
-
-					graphics.moveTo(hostComponent.data.marginLeft + yMoveTo, yyMove);
-					
-
-					graphics.lineTo(hostComponent.data.marginLeft + yLineTo, yyMove - hostComponent.data.barHeight - hostComponent.data.gap);
 					}
-						
+				}else {
+					graphics.moveTo(hostComponent.marginLeft + getFirstValue, hostComponent.data.height - (hostComponent.marginBottom + hostComponent.data.offSet + hostComponent.data.barHeight/2));
+					
+					for (k= 0; k < hostComponent.dataProvider.length - 1; k++) {
+						getValueForLineTo= hostComponent.dataProvider.getItemAt(k+1);
+						yLineTo = getValueForLineTo[hostComponent.data.valueField];
+						var yyMove:Number = hostComponent.data.height - (hostComponent.data.gap*k + hostComponent.data.barHeight*k + hostComponent.marginBottom + hostComponent.data.offSet + hostComponent.data.barHeight/2);
+
+						graphics.lineTo(hostComponent.marginLeft + yLineTo, yyMove - hostComponent.data.barHeight - hostComponent.data.gap);
+					}
 				}
-			
+
 			}
 		]]>
 	</fx:Script>

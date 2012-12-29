@@ -47,31 +47,103 @@ package fxrialab.controls.charts
 			_data = value;
 		}
 		
+		public function getPositionXOfPie(distance:Number):Number{
+			var angle:Number = data.value / data.sumValue * 360/2 + data.startAngle;
+			var rad:Number = Math.PI/180 * angle;
+			
+			return Math.cos(rad) * distance;
+		}
+		
+		public function getPositionYOfPie(distance:Number):Number {
+			var angle:Number = data.value / data.sumValue * 360/2 + data.startAngle;
+			var rad:Number = Math.PI/180 * angle;
+			
+			return Math.sin(rad) * distance;
+		}
+		
+		private var txtLabelField:TextField;
+		
 		public function draw():void {
-			//@todo: add rotation for label value
-			/*var txtLabelField:TextField = new TextField();
+			//calculate and add label field for pie
+			txtLabelField = new TextField();
 			var txtLabelFormat:TextFormat = new TextFormat();
 			txtLabelFormat.font = "Arial";
+			txtLabelFormat.align = "left";
+			txtLabelFormat.size = 8;
+			txtLabelFormat.color = getFill.color;
+			
 			var angle:Number = data.value / data.sumValue * 360/2 + data.startAngle;
-			var rad:Number   = Math.PI/180*angle;
 			
-			var ddx:Number = Math.cos(rad) * (data.radius + 15);
-			var ddy:Number = Math.sin(rad) * (data.radius + 15);
-			//origin = new Point(x, y);
-			txtLabelField.width = 100;
-			txtLabelField.height = 20;
+			var moveX:Number = getPositionXOfPie(data.radius);
+			var moveY:Number = getPositionYOfPie(data.radius);
+			var lineX:Number = getPositionXOfPie(data.radius + 20);
+			var lineY:Number = getPositionYOfPie(data.radius + 20);
+			var topX:Number = getPositionXOfPie(data.radius + 40);
+			var topY:Number = getPositionYOfPie(data.radius + 40);
 			
+			this.graphics.lineStyle(0.8, 0x00);
+			this.graphics.moveTo(moveX + data.centerX, moveY + data.centerY);
+
 			txtLabelField.text = data.label;
-			txtLabelField.x = ddx + data.centerX;
-			txtLabelField.y = ddy + data.centerY;
+			if (angle > 70 && angle < 290) {
+				if(angle < 90 || angle > 270){
+					if (data.arrays.indexOf(data.label) % 2 == 0) {
+						this.graphics.lineTo(topX + data.centerX, topY + data.centerY);
+						this.graphics.lineTo(topX + data.centerX + 10, topY + data.centerY);
+						txtLabelField.x = topX + data.centerX  + 10;
+						txtLabelField.y = topY + data.centerY  - 7;
+					}else {
+						this.graphics.lineTo(topX + data.centerX, topY + data.centerY);
+						this.graphics.lineTo(topX + data.centerX + 30, topY + data.centerY);
+						txtLabelField.x = topX + data.centerX + 30;
+						txtLabelField.y = topY + data.centerY - 7;
+					}
+				}else if(angle > 110 && angle < 250) {
+					if (data.arrays.indexOf(data.label) % 2 == 0) {
+						this.graphics.lineTo(lineX + data.centerX, lineY + data.centerY);
+						this.graphics.lineTo(lineX + data.centerX - 10, lineY + data.centerY);
+						txtLabelField.x = lineX + data.centerX - txtLabelField.textWidth - 12;
+						txtLabelField.y = lineY + data.centerY - 7;
+					}else {
+						this.graphics.lineTo(lineX + data.centerX, lineY + data.centerY);
+						this.graphics.lineTo(lineX + data.centerX - 30, lineY + data.centerY);
+						txtLabelField.x = lineX + data.centerX - txtLabelField.textWidth - 32;
+						txtLabelField.y = lineY + data.centerY - 7;
+					}
+				}else {
+					if (data.arrays.indexOf(data.label) % 2 == 0) {
+						this.graphics.lineTo(topX + data.centerX, topY + data.centerY);
+						this.graphics.lineTo(topX + data.centerX - 10, topY + data.centerY);
+						txtLabelField.x = topX + data.centerX - txtLabelField.textWidth - 12;
+						txtLabelField.y = topY + data.centerY - 7;
+					}else {
+						this.graphics.lineTo(topX + data.centerX, topY + data.centerY);
+						this.graphics.lineTo(topX + data.centerX - 30, topY + data.centerY);
+						txtLabelField.x = topX + data.centerX - txtLabelField.textWidth - 32;
+						txtLabelField.y = topY + data.centerY - 7;
+					}
+				}
+			}else {
+				if (data.arrays.indexOf(data.label) % 2 == 0) {
+					this.graphics.lineTo(lineX + data.centerX, lineY + data.centerY);
+					this.graphics.lineTo(lineX + data.centerX + 10, lineY + data.centerY);
+					txtLabelField.x = lineX + data.centerX + 10;
+					txtLabelField.y = lineY + data.centerY - 7;
+				}else {
+					this.graphics.lineTo(lineX + data.centerX, lineY + data.centerY);
+					this.graphics.lineTo(lineX + data.centerX + 30, lineY + data.centerY);
+					txtLabelField.x = lineX + data.centerX + 30;
+					txtLabelField.y = lineY + data.centerY - 7;
+				}
+				
+			}
+			txtLabelField.width = txtLabelField.textWidth + 10;
+			txtLabelField.height = 20;
 			txtLabelField.setTextFormat(txtLabelFormat);
-			
-			//txtLabelField.embedFonts = true;
-			//txtLabelField.rotation = angle;
-			trace(txtLabelField.embedFonts);
-			
-			addChild(txtLabelField);*/
-			
+			/*trace('labelXXX:', txtLabelField.x);
+			trace('labelYYY:', txtLabelField.y);*/
+			addChild(txtLabelField);
+			//get data for draw pie
 			var commandsData:Vector.<Object> = DrawHelper.Arc(data.centerX, data.centerY, data.radius, data.startAngle, data.arcData);
 			var cmds:Vector.<int> = new Vector.<int>();
 			var pts:Vector.<Number> = new Vector.<Number>();
@@ -80,26 +152,17 @@ package fxrialab.controls.charts
 				cmds.push(int(data.command));
 				pts.push(Number(data.x),Number(data.y));
 			}
-			
-			var gradType:String = GradientType.RADIAL;
-			var colors:Array = [];
-			var alphas:Array = [1, 1];
-			var ratios:Array = [0, 255];
-			var matrix:Matrix = new Matrix();
-			matrix.createGradientBox(data.radius, data.radius,0, 20, 20);
-			//@todo: add gradient to later
-			this.graphics.clear();
+			//draw with gradient
 			this.graphics.lineStyle(2, 0xFFFFFF);
-			if (getFill.color.search(',') == -1) {
-				this.graphics.beginFill(getFill.color, 1);
-			}else {
-				var getGradientColor:String = getFill.color;
-				var getFirstColor:uint = uint(getGradientColor.substring(0, getGradientColor.indexOf(',')));
-				var getSecondColor:uint = uint(getGradientColor.substring(getGradientColor.indexOf(',')+1, getGradientColor.length));
-				colors.push(getFirstColor, getSecondColor);
-				//trace('color', colors);
-				this.graphics.beginGradientFill(gradType, colors, alphas, ratios);
-			}
+			var gradType:String = GradientType.RADIAL;
+			var colors:Array = [getFill.color, getFill.color, getFill.color];
+			var alphas:Array = [0.2, 0.4, 0.6];
+			var ratios:Array = [25, 245,255];
+			var matrix:Matrix = new Matrix();
+			
+			matrix.createGradientBox(getFill.radius*2, getFill.radius*2, 0, getFill.centerX - getFill.radius, getFill.centerY - getFill.radius);
+
+			this.graphics.beginGradientFill(gradType, colors, alphas, ratios, matrix);
 			this.graphics.drawPath(cmds, pts);
 			this.graphics.endFill();
 			
@@ -123,10 +186,11 @@ package fxrialab.controls.charts
 		}
 		
 		public var tooltip:Sprite;
+		public var txtFieldTooltip:TextField;
 		
 		public function showTooltip():void {
 			
-			var txtFieldTooltip:TextField = new TextField();
+			txtFieldTooltip = new TextField();
 			var txtFormatTooltip:TextFormat = new TextFormat();
 			var calcPercent:Number = (data.value/data.sumValue * 100);
 			
@@ -142,24 +206,36 @@ package fxrialab.controls.charts
 			txtFieldTooltip.multiline = true;
 			txtFieldTooltip.text = data.label +":"+ calcPercent.toFixed(2) + "%";
 			txtFieldTooltip.setTextFormat(txtFormatTooltip);
-			
-			tooltip = DrawHelper.Tooltip(txtFieldTooltip.textWidth + 10, txtFieldTooltip.height, 0x1a8948);
+
+			tooltip = DrawHelper.Tooltip(txtFieldTooltip.textWidth + 8, txtFieldTooltip.height, 0x1a8948);
 			tooltip.addChild(txtFieldTooltip);
+			
 			var p:Point = new Point(this.mouseX, this.mouseY);
 			p = this.localToGlobal(p);
-			tooltip.x = p.x;
+			tooltip.x = p.x - (txtFieldTooltip.textWidth + 8)/2;
 			tooltip.y = p.y - tooltip.height - 1;
-				
-			this.stage.addChild(tooltip);
 			
+			this.stage.addChild(tooltip);
+
+			//trace('tooltip.xxx:', p.x);
+			//trace('tooltip.yyy:', p.y);
 			addEventListener(MouseEvent.MOUSE_MOVE, moveTooltip, false, 0, true);
 		}
 		
 		private function moveTooltip(evt:MouseEvent):void {
 			if(tooltip){
-				tooltip.x = evt.stageX - tooltip.width / 2;
+				tooltip.x = evt.stageX - (txtFieldTooltip.textWidth + 8)/2;
 				tooltip.y = evt.stageY - tooltip.height - 1;
+
+				
+				/*if(tooltip.x == 537 && tooltip.y == 270){
+					/*trace('labelX:', txtLabelField.x);
+					trace('labelY:', txtLabelField.y);
+					stage.removeChild(tooltip);
+					tooltip = null;
+				}*/
 			}
+			
 		}
 		public function hideTooltip():void {
 			if(tooltip){

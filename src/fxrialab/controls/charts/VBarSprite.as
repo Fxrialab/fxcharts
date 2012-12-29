@@ -2,6 +2,7 @@ package fxrialab.controls.charts
 {
 	import flash.display.Sprite;
 	import flash.display.GradientType;
+	import flash.geom.Matrix;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	
@@ -30,27 +31,18 @@ package fxrialab.controls.charts
 		
 		public function draw():void {
 			var gradType:String = GradientType.LINEAR;
-			var colors:Array = [];
-			var alphas:Array = [1, 1];
-			var ratios:Array = [0, 255];
+			var colors:Array = [data.fill, data.fill, data.fill];
+			var alphas:Array = [0.3, 0.6, 1];
+			var ratios:Array = [0, 128, 255];
+			var matrix:Matrix = new Matrix();
+			matrix.createGradientBox(data.value, data.barHeight, 0, data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+			
 			var bar:Sprite = new Sprite();
 
-			bar.graphics.clear();
-			
-			if (data.fill.search(',') == -1) {
-				bar.graphics.beginFill(data.fill, 1);
-			}else {
-				var getGradientColor:String = data.fill;
-				var getFirstColor:uint = uint(getGradientColor.substring(0, getGradientColor.indexOf(',')));
-				var getSecondColor:uint = uint(getGradientColor.substring(getGradientColor.indexOf(',')+1, getGradientColor.length));
-				colors.push(getFirstColor, getSecondColor);
-
-				bar.graphics.beginGradientFill(gradType, colors, alphas, ratios);
-			}
-			
+			bar.graphics.beginGradientFill(gradType, colors, alphas, ratios, matrix);
 			bar.graphics.drawRect(data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight), data.value, data.barHeight);
-
 			bar.graphics.endFill();
+			
 			addChild(bar);
 			//draw border
 			var border:Sprite = new Sprite();
@@ -67,8 +59,7 @@ package fxrialab.controls.charts
 			labelFieldFormat.size = 7;
 			labelFieldFormat.font = 'Arial';
 			labelFieldFormat.align = 'left';
-			var getTxtColor:uint = (colors.length > 0) ? colors[0] : data.fill;
-			labelFieldFormat.color = getTxtColor;
+			labelFieldFormat.color = data.fill;
 			
 			var valueFieldFormat:TextFormat = new TextFormat();
 			valueFieldFormat.size = 7;

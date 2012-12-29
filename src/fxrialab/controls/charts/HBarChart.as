@@ -21,10 +21,10 @@ package fxrialab.controls.charts
 		private var _fillField:String = "fill";
 		private var _data:Object;
 		
-		private var marginTop:Number = 20;
-		private var marginRight:Number = 10;
-		private var marginBottom:Number = 10;
-		private var marginLeft:Number = 10;
+		private var _marginTop:Number;
+		private var _marginRight:Number;
+		private var _marginBottom:Number;
+		private var _marginLeft:Number;
 		
 		public var hBars:Array = [];
 		
@@ -100,9 +100,9 @@ package fxrialab.controls.charts
 				
 				var getFill:Object = dataProvider.getItemAt(i);
 				var fill:String = (getFill[fillField] == null) ? '#DC2400': getFill[fillField];
-				var fillColor:String = (fill.search('#') == 0 || fill.search('#') == fill.indexOf(',')+1 || fill.search('#') == fill.indexOf(',')+2) ? fill.replace('#', '0x') : fill;
+				var fillColor:String = (fill.search('#') == 0) ? fill.replace('#', '0x') : fill;
 				bar.data.fill = fillColor;
-				trace(fillColor);
+				//trace(fillColor);
 				bar.data.offSet = _offSet;
 				bar.data.gap = _gap;
 				bar.data.gapSum = _gap * i;
@@ -189,7 +189,54 @@ package fxrialab.controls.charts
 			redrawSkin = true;
 			invalidateProperties();
 		}
-
+		
+		public function get marginTop():Number 
+		{
+			return _marginTop;
+		}
+		
+		public function set marginTop(value:Number):void 
+		{
+			_marginTop = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+		
+		public function get marginRight():Number 
+		{
+			return _marginRight;
+		}
+		
+		public function set marginRight(value:Number):void 
+		{
+			_marginRight = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+		
+		public function get marginBottom():Number 
+		{
+			return _marginBottom;
+		}
+		
+		public function set marginBottom(value:Number):void 
+		{
+			_marginBottom = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+		
+		public function get marginLeft():Number 
+		{
+			return _marginLeft;
+		}
+		
+		public function set marginLeft(value:Number):void 
+		{
+			_marginLeft = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
 		
 	}
 }
