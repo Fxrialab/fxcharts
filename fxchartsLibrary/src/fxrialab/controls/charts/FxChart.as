@@ -5,6 +5,7 @@ package fxrialab.controls.charts
 	import mx.charts.PieChart;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
+	import mx.collections.ListCollectionView;
 	import mx.core.UIComponent;
 	import mx.managers.ILayoutManagerClient;
 	import mx.messaging.AbstractConsumer;
@@ -53,7 +54,9 @@ package fxrialab.controls.charts
 			return _dataProvider;
 		}
 		
-		public var arrays:Array = [];
+		public var positiveValueArrays:Array = [];
+		public var negativeValueArrays:Array = [];
+		public var listLengthOfLine:Array = [];
 		
 		public function set dataProvider(value:IList):void
 		{
@@ -72,15 +75,29 @@ package fxrialab.controls.charts
 				charts.addItem( { type: type, stroke: stroke, data: data } );
 				//get min, max for arrays
 				var dataItemsChart:Object = dataProvider.getItemAt(i);
-				
 				var itemsData:IList = new ArrayList(dataItemsChart[_dataSeriesField] as Array);
+				//get chart first type
+				var chartFirstDataItem:Object = dataProvider.getItemAt(0);
 
-				var calc:int = 0;
-				for (var k:int = 0; k < itemsData.length; k++) {
-					var daa:Object = itemsData.getItemAt(k);
-					calc += daa[valueField];
+				//get length of each type for group charts
+				var getChartsFirstType:String = String(chartFirstDataItem[typeField]);
+				if(getChartsFirstType == LINE || getChartsFirstType == HORIZONTAL_BAR || getChartsFirstType == VERTICAL_BAR){
+					listLengthOfLine.push(itemsData.length);
 				}
-				arrays.push(calc);
+				for (var k:int = 0; k < itemsData.length; k++) {
+					var getDataValue:Object = itemsData.getItemAt(k);
+					//calc += getDataValue[valueField];
+					
+					if(getDataValue[valueField] >= 0 && listLengthOfLine[0] == itemsData.length) {
+						positiveValueArrays.push(getDataValue[valueField]);
+					}
+					
+					if(getDataValue[valueField] < 0 && listLengthOfLine[0] == itemsData.length){
+						negativeValueArrays.push(getDataValue[valueField]);
+					}
+				}
+				//positiveValueArray.push(calc);
+				
 			}
 		}
 		
@@ -98,14 +115,8 @@ package fxrialab.controls.charts
 				var chartFirstType:String = String(chartFirstDataItem[typeField]);
 				var firstDataItems:IList = new ArrayList(chartFirstDataItem[_dataSeriesField] as Array);
 				
-				/*var calcSum:int=0;
-				for (var j:int = 0; j < dataItems.length; j++)
-				{
-					var data1:Object = dataItems.getItemAt(j);
-					calcSum += data1[valueField];
-				}
-				arrays.push(calcSum);
-				trace("finally Max:", findMax(arrays) );*/
+				//set number point for line
+				var lineChartDefault:Number = listLengthOfLine[0];
 				//draw axis 
 				if (i == 0)
 				{
@@ -146,7 +157,12 @@ package fxrialab.controls.charts
 								if (dataProvider)
 								{
 									coordinateAxis["dataProvider"] = dataItems;
-									coordinateAxis["maxSum"] = findMax(arrays);
+								}
+								if (positiveValueArrays && positiveValueArrays.length > 0){
+									coordinateAxis["maxValue"] = findMax(positiveValueArrays);
+								}
+								if (negativeValueArrays && negativeValueArrays.length > 0){
+									coordinateAxis["minValue"] = findMin(negativeValueArrays);
 								}
 								coordinateAxis["title"] = title;
 								coordinateAxis['marginTop'] = marginTop;
@@ -161,7 +177,7 @@ package fxrialab.controls.charts
 						}
 					}
 				}
-				
+				//trace(lineChartDefault);
 				//draw charts
 				var chart:DisplayObject = generateChart(chartDataItem);
 				if (chart is LineChart)
@@ -176,14 +192,26 @@ package fxrialab.controls.charts
 					{
 						if (chartType == HORIZONTAL_BAR || chartType == LINE)
 						{
-							addChild(chart);
+							if(chartType == LINE){
+								if(dataItems.length == lineChartDefault){
+									addChild(chart);
+								}
+							}else if(chartType == HORIZONTAL_BAR){
+								addChild(chart);
+							}
 						}
 					}
 					else if (chartFirstType == VERTICAL_BAR || chartFirstType == LINE)
 					{
 						if (chartType == VERTICAL_BAR || chartType == LINE)
 						{
-							addChild(chart);
+							if(chartType == LINE){
+								if(dataItems.length == lineChartDefault){
+									addChild(chart);
+								}
+							}else if(chartType == VERTICAL_BAR){
+								addChild(chart);
+							}
 						}
 						
 					}
@@ -198,8 +226,7 @@ package fxrialab.controls.charts
 		}
 		
 		protected function findMax(arrays:Array):Number
-		{
-			
+		{			
 			var max:Number;
 			max = arrays[0];
 			for (var i:int = 0; i < arrays.length; i ++) {
@@ -208,6 +235,18 @@ package fxrialab.controls.charts
 				}
 			}
 			return max;
+		}
+		
+		protected function findMin(arrays:Array):Number
+		{
+			var min:Number;
+			min = arrays[0];
+			for (var i:int = 0; i < arrays.length; i++){
+				if(arrays[i] < min){
+					min = arrays[i];
+				}
+			}
+			return min;
 		}
 		
 		protected function generateChart(data:Object):DisplayObject
@@ -236,6 +275,13 @@ package fxrialab.controls.charts
 					(chart as HBarChart).marginRight = marginRight;
 					(chart as HBarChart).marginBottom = marginBottom;
 					(chart as HBarChart).marginLeft = marginLeft;
+					//call max value & min value 
+					if (positiveValueArrays && positiveValueArrays.length > 0){
+						(chart as HBarChart).maxValue = findMax(positiveValueArrays);
+					}
+					if (negativeValueArrays && negativeValueArrays.length > 0){
+						(chart as HBarChart).minValue = findMin(negativeValueArrays);
+					}
 					break;
 				case LINE: 
 					var getLineStroke:String = String(data[strokeField]);

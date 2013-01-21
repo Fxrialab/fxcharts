@@ -26,6 +26,9 @@ package fxrialab.controls.charts
 		private var _marginBottom:Number;
 		private var _marginLeft:Number;
 		
+		private var _maxValue:Number;
+		private var _minValue:Number;
+		
 		public var hBars:Array = [];
 		
 		[SkinPart]
@@ -114,7 +117,9 @@ package fxrialab.controls.charts
 
 				bar.data.marginLeft = marginLeft;
 				bar.data.marginRight = marginRight;
-				bar.data.marginBottom = marginBottom
+				bar.data.marginBottom = marginBottom;
+				
+				bar.data.minValue = minValue - 30;
 				//draw
 				bar.draw();
 			}
@@ -237,6 +242,31 @@ package fxrialab.controls.charts
 			redrawSkin = true;
 			invalidateProperties();
 		}
+
+		public function get maxValue():Number
+		{
+			return _maxValue;
+		}
+
+		public function set maxValue(value:Number):void
+		{
+			_maxValue = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+
+		public function get minValue():Number
+		{
+			return _minValue;
+		}
+
+		public function set minValue(value:Number):void
+		{
+			_minValue = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+
 		
 	}
 }

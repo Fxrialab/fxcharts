@@ -21,7 +21,8 @@ package fxrialab.controls.charts
 		private var _labelField:String = "label";
 		private var _valueField:String = "value";
 		private var _orientation:String = 'horizontal';
-		private var _maxSum:Number;
+		private var _maxValue:Number;
+		private var _minValue:Number;
 		private var _title:String;
 		private var _gap:Number;
 		private var _marginTop:Number;
@@ -102,14 +103,26 @@ package fxrialab.controls.charts
 			_orientation = value;
 		}
 		
-		public function get maxSum():Number
+		public function get maxValue():Number
 		{
-			return _maxSum;
+			return _maxValue;
 		}
 
-		public function set maxSum(value:Number):void
+		public function set maxValue(value:Number):void
 		{
-			_maxSum = value;
+			_maxValue = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+		
+		public function get minValue():Number
+		{
+			return _minValue;
+		}
+		
+		public function set minValue(value:Number):void
+		{
+			_minValue = value;
 			redrawSkin = true;
 			invalidateProperties();
 		}
