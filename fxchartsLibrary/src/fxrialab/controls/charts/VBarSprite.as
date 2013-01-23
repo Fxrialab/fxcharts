@@ -40,7 +40,11 @@ package fxrialab.controls.charts
 			var bar:Sprite = new Sprite();
 
 			bar.graphics.beginGradientFill(gradType, colors, alphas, ratios, matrix);
-			bar.graphics.drawRect(data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight), data.value, data.barHeight);
+			if (data.minValue) {
+				bar.graphics.drawRect(data.marginLeft + data.minValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight), data.value, data.barHeight);
+			}else {
+				bar.graphics.drawRect(data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight), data.value, data.barHeight);
+			}
 			bar.graphics.endFill();
 			
 			addChild(bar);
@@ -48,10 +52,17 @@ package fxrialab.controls.charts
 			var border:Sprite = new Sprite();
 			border.graphics.lineStyle(2, 0xFFFFFF);
 			
-			border.graphics.moveTo(data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
-			border.graphics.lineTo(data.marginLeft + data.value, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
-			border.graphics.lineTo(data.marginLeft + data.value, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
-			border.graphics.lineTo(data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
+			if (data.minValue) {
+				border.graphics.moveTo(data.marginLeft + data.minValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+				border.graphics.lineTo(data.marginLeft + data.value + data.minValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+				border.graphics.lineTo(data.marginLeft + data.value + data.minValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
+				border.graphics.lineTo(data.marginLeft + data.minValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
+			}else {
+				border.graphics.moveTo(data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+				border.graphics.lineTo(data.marginLeft + data.value, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+				border.graphics.lineTo(data.marginLeft + data.value, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
+				border.graphics.lineTo(data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
+			}
 			
 			addChild(border);		
 			//text format for label field and value field
@@ -70,14 +81,22 @@ package fxrialab.controls.charts
 			//draw label field
 			var labelField:TextField = new TextField();
 			labelField.text = data.label;
-			labelField.x = data.marginLeft + data.value + 7;
+			if(data.minValue) {
+				labelField.x = data.marginLeft + data.value + data.minValue + 7;
+			}else {
+				labelField.x = data.marginLeft + data.value + 7;
+			}
 			labelField.y = data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight/ 2);
 			labelField.setTextFormat(labelFieldFormat);
 			addChild(labelField);
 			//draw value field
 			var valueField:TextField = new TextField();
 			valueField.text = data.value;
-			valueField.x = data.marginLeft + data.value + 7;
+			if(data.minValue) {
+				valueField.x = data.marginLeft + data.value + data.minValue + 7;
+			}else {
+				valueField.x = data.marginLeft + data.value + 7;
+			}
 			valueField.y = data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight - 3);
 			valueField.setTextFormat(valueFieldFormat);
 			addChild(valueField);

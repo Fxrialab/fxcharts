@@ -39,7 +39,7 @@ package fxrialab.controls.charts
 			
 			bar.graphics.beginGradientFill(gradType, colors, alphas, ratios, matrix);
 			if(data.minValue){
-				bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom + data.minValue, data.barWidth, data.value);
+				bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom - data.minValue, data.barWidth, data.value);
 			}else {
 				bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom, data.barWidth, data.value);
 			}
@@ -51,10 +51,10 @@ package fxrialab.controls.charts
 
 			border.graphics.lineStyle(2, 0xFFFFFF);
 			if(data.minValue) {
-				border.graphics.moveTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.marginBottom + data.minValue);
-				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom + data.minValue);
-				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - data.value - data.marginBottom + data.minValue);
-				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - data.marginBottom + data.minValue);
+				border.graphics.moveTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.marginBottom - data.minValue);
+				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom - data.minValue);
+				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - data.value - data.marginBottom - data.minValue);
+				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - data.marginBottom - data.minValue);
 			}else {
 				border.graphics.moveTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.marginBottom);
 				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom);
@@ -82,7 +82,7 @@ package fxrialab.controls.charts
 			labelField.text = data.label;
 			labelField.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum;
 			if(data.minValue) {
-				labelField.y = data.height - data.marginBottom - (data.value + 12) + data.minValue;
+				labelField.y = data.height - data.marginBottom - (data.value + 12) - data.minValue;
 			}else {
 				labelField.y = data.height - data.marginBottom - (data.value + 12);
 			}
@@ -95,7 +95,7 @@ package fxrialab.controls.charts
 			valueField.text = data.value;
 			valueField.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum;
 			if(data.minValue) {
-				valueField.y = data.height - data.marginBottom - (data.value + 22) + data.minValue;
+				valueField.y = data.height - data.marginBottom - (data.value + 22) - data.minValue;
 			}else {
 				valueField.y = data.height - data.marginBottom - (data.value + 22);
 			}

@@ -119,7 +119,8 @@ package fxrialab.controls.charts
 				bar.data.marginRight = marginRight;
 				bar.data.marginBottom = marginBottom;
 				
-				bar.data.minValue = minValue - 30;
+				bar.data.minValue = minValue;
+				bar.data.maxValue = maxValue;
 				//draw
 				bar.draw();
 			}

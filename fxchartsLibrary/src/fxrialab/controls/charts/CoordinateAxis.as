@@ -21,8 +21,12 @@ package fxrialab.controls.charts
 		private var _labelField:String = "label";
 		private var _valueField:String = "value";
 		private var _orientation:String = 'horizontal';
+		
 		private var _maxValue:Number;
 		private var _minValue:Number;
+		private var _numberLineLandMarkDefault:Number;
+		private var _numberLineLandMarkForNegativeAxis:Number;
+		
 		private var _title:String;
 		private var _gap:Number;
 		private var _marginTop:Number;
@@ -198,5 +202,31 @@ package fxrialab.controls.charts
 			redrawSkin = true;
 			invalidateProperties();
 		}	
+
+		public function get numberLineLandMarkDefault():Number
+		{
+			return _numberLineLandMarkDefault;
+		}
+
+		public function set numberLineLandMarkDefault(value:Number):void
+		{
+			_numberLineLandMarkDefault = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+
+		public function get numberLineLandMarkForNegativeAxis():Number
+		{
+			return _numberLineLandMarkForNegativeAxis;
+		}
+
+		public function set numberLineLandMarkForNegativeAxis(value:Number):void
+		{
+			_numberLineLandMarkForNegativeAxis = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+
+
 	}
 }

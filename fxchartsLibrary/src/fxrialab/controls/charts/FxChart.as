@@ -38,10 +38,14 @@ package fxrialab.controls.charts
 		private var _marginRight:Number = 10;
 		private var _marginBottom:Number = 10;
 		private var _marginLeft:Number = 10;
-		private var getMax:Array = [];
+
+		private var _numberLineLandMarkDefault:Number = 10;
+		private var _numberLineLandMarkForNegativeAxis:Number;
 		
 		private var char:Array = [];
 		private var chart:DisplayObject;
+		private var maxValue:Number;
+		private var minValue:Number;
 		
 		public function FxChart()
 		{
@@ -117,6 +121,17 @@ package fxrialab.controls.charts
 				
 				//set number point for line
 				var lineChartDefault:Number = listLengthOfLine[0];
+				//get min vs max value
+				if (positiveValueArrays && positiveValueArrays.length > 0) {
+					var getMaxValue:Number = findMax(positiveValueArrays);
+					maxValue = getMaxValue + 30;
+				}
+				if (negativeValueArrays && negativeValueArrays.length > 0) {
+					var getMinValue:Number = findMin(negativeValueArrays);
+					var getNumberLandMark:Number = -getMinValue/(maxValue/numberLineLandMarkDefault);
+					numberLineLandMarkForNegativeAxis = int(getNumberLandMark) + 1;
+					minValue = (maxValue/numberLineLandMarkDefault) * numberLineLandMarkForNegativeAxis;
+				}
 				//draw axis 
 				if (i == 0)
 				{
@@ -158,12 +173,16 @@ package fxrialab.controls.charts
 								{
 									coordinateAxis["dataProvider"] = dataItems;
 								}
+								
+								coordinateAxis['numberLineLandMarkDefault'] = numberLineLandMarkDefault;
 								if (positiveValueArrays && positiveValueArrays.length > 0){
-									coordinateAxis["maxValue"] = findMax(positiveValueArrays);
+									coordinateAxis["maxValue"] = maxValue;
 								}
 								if (negativeValueArrays && negativeValueArrays.length > 0){
-									coordinateAxis["minValue"] = findMin(negativeValueArrays);
+									coordinateAxis["minValue"] = minValue;
+									coordinateAxis['numberLineLandMarkForNegativeAxis'] = numberLineLandMarkForNegativeAxis;
 								}
+			
 								coordinateAxis["title"] = title;
 								coordinateAxis['marginTop'] = marginTop;
 								coordinateAxis['marginRight'] = marginRight;
@@ -265,6 +284,13 @@ package fxrialab.controls.charts
 					(chart as VBarChart).marginRight = marginRight;
 					(chart as VBarChart).marginBottom = marginBottom;
 					(chart as VBarChart).marginLeft = marginLeft;
+					//call max value & min value 
+					if (positiveValueArrays && positiveValueArrays.length > 0){
+						(chart as VBarChart).maxValue = maxValue;
+					}
+					if (negativeValueArrays && negativeValueArrays.length > 0){
+						(chart as VBarChart).minValue = minValue;
+					}
 					break;
 				case HORIZONTAL_BAR: 
 					chart = new HBarChart();
@@ -277,10 +303,10 @@ package fxrialab.controls.charts
 					(chart as HBarChart).marginLeft = marginLeft;
 					//call max value & min value 
 					if (positiveValueArrays && positiveValueArrays.length > 0){
-						(chart as HBarChart).maxValue = findMax(positiveValueArrays);
+						(chart as HBarChart).maxValue = maxValue;
 					}
 					if (negativeValueArrays && negativeValueArrays.length > 0){
-						(chart as HBarChart).minValue = findMin(negativeValueArrays);
+						(chart as HBarChart).minValue = minValue;
 					}
 					break;
 				case LINE: 
@@ -296,6 +322,13 @@ package fxrialab.controls.charts
 					(chart as LineChart).marginBottom = marginBottom;
 					(chart as LineChart).marginLeft = marginLeft;
 					(chart as LineChart).stroke = (lineStroke) ? lineStroke : 0x3f9b90;
+					//call max value & min value 
+					if (positiveValueArrays && positiveValueArrays.length > 0){
+						(chart as LineChart).maxValue = maxValue;
+					}
+					if (negativeValueArrays && negativeValueArrays.length > 0){
+						(chart as LineChart).minValue = minValue;
+					}
 					break;
 				case PIE: 
 					chart = new PieCharts();
@@ -479,6 +512,31 @@ package fxrialab.controls.charts
 			redrawSkin = true;
 			invalidateProperties();
 		}
+
+		public function get numberLineLandMarkDefault():Number
+		{
+			return _numberLineLandMarkDefault;
+		}
+
+		public function set numberLineLandMarkDefault(value:Number):void
+		{
+			_numberLineLandMarkDefault = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+
+		public function get numberLineLandMarkForNegativeAxis():Number
+		{
+			return _numberLineLandMarkForNegativeAxis;
+		}
+
+		public function set numberLineLandMarkForNegativeAxis(value:Number):void
+		{
+			_numberLineLandMarkForNegativeAxis = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+
 		
 	}
 }
