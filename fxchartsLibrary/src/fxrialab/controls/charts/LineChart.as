@@ -124,6 +124,9 @@ package fxrialab.controls.charts
 				line.data.barHeight = barHeight;
 				line.data.barHeightSum = barHeight*i;
 				
+				line.data.font = getStyle('fontDefault');
+				line.data.size = getStyle('sizeDefault');
+				line.data.align = getStyle('leftAlign');
 				line.data.stroke = stroke;
 				
 				line.data.marginBottom = marginBottom;

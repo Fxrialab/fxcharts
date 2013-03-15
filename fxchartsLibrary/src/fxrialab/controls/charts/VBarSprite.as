@@ -35,8 +35,11 @@ package fxrialab.controls.charts
 			var alphas:Array = [0.3, 0.6, 1];
 			var ratios:Array = [0, 128, 255];
 			var matrix:Matrix = new Matrix();
-			matrix.createGradientBox(data.value, data.barHeight, 0, data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
-			
+			if (data.minValue) {
+				matrix.createGradientBox(data.value, data.barHeight, 0, data.marginLeft + data.minValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+			}else {
+				matrix.createGradientBox(data.value, data.barHeight, 0, data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+			}
 			var bar:Sprite = new Sprite();
 
 			bar.graphics.beginGradientFill(gradType, colors, alphas, ratios, matrix);
@@ -67,24 +70,28 @@ package fxrialab.controls.charts
 			addChild(border);		
 			//text format for label field and value field
 			var labelFieldFormat:TextFormat = new TextFormat();
-			labelFieldFormat.size = 7;
-			labelFieldFormat.font = 'Arial';
-			labelFieldFormat.align = 'left';
+			labelFieldFormat.size = data.size;
+			labelFieldFormat.font = data.font;
+			labelFieldFormat.align = data.align;
 			labelFieldFormat.color = data.fill;
 			
 			var valueFieldFormat:TextFormat = new TextFormat();
-			valueFieldFormat.size = 7;
-			valueFieldFormat.font = 'Verdana';
-			valueFieldFormat.align = 'left';
+			valueFieldFormat.size = data.size;
+			valueFieldFormat.font = data.font;
+			valueFieldFormat.align = data.align;
 			valueFieldFormat.color = 0x000000;
 
 			//draw label field
 			var labelField:TextField = new TextField();
 			labelField.text = data.label;
 			if(data.minValue) {
-				labelField.x = data.marginLeft + data.value + data.minValue + 7;
+				if (data.value < 0) {
+					labelField.x = data.marginLeft + data.value + data.minValue - labelField.textWidth + 5;
+				}else {
+					labelField.x = data.marginLeft + data.value + data.minValue + 5;
+				}
 			}else {
-				labelField.x = data.marginLeft + data.value + 7;
+				labelField.x = - labelField.textWidth + 10;
 			}
 			labelField.y = data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight/ 2);
 			labelField.setTextFormat(labelFieldFormat);
@@ -93,9 +100,13 @@ package fxrialab.controls.charts
 			var valueField:TextField = new TextField();
 			valueField.text = data.value;
 			if(data.minValue) {
-				valueField.x = data.marginLeft + data.value + data.minValue + 7;
+				if (data.value < 0) {
+					valueField.x = data.marginLeft + data.value + data.minValue - valueField.textWidth - 2;
+				}else {
+					valueField.x = data.marginLeft + data.value + data.minValue + 5;
+				}
 			}else {
-				valueField.x = data.marginLeft + data.value + 7;
+				valueField.x = data.marginLeft + data.value + 5;
 			}
 			valueField.y = data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight - 3);
 			valueField.setTextFormat(valueFieldFormat);

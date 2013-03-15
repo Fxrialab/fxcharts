@@ -18,6 +18,7 @@ package fxrialab.controls.charts
 		private var _valueField:String = "value";
 		private var _fillField:String = "fill";
 		private var _data:Object;
+		private var _fill:uint;
 		
 		private var _marginTop:Number;
 		private var _marginRight:Number;
@@ -100,10 +101,14 @@ package fxrialab.controls.charts
 				bar.data = dataProvider.getItemAt(i);
 				bar.data.sumValue = sumValue;
 				
-				var getFill:Object = dataProvider.getItemAt(i);
-				var fill:String = (getFill[fillField] == null) ? '#DC2400': getFill[fillField];
-				var fillColor:String = (fill.search('#') == 0) ? fill.replace('#', '0x') : fill;
-				bar.data.fill = fillColor;
+				/*var getFill:String = (dataProvider.getItemAt(i) as Object)[fillField];
+				if (getFill) {
+					var fillEachBar:uint = (getFill.search('#') == 0) ? uint(getFill.replace('#', '0x')) : uint(getFill);
+				}*/
+				bar.data.font = getStyle('fontDefault');
+				bar.data.size = getStyle('sizeDefault');
+				bar.data.align = getStyle('leftAlign');
+				bar.data.fill = fill;
 				
 				bar.data.gapCalc = _gap * i;
 				bar.data.offSet = _offSet;
@@ -261,6 +266,16 @@ package fxrialab.controls.charts
 			_minValue = value;
 			redrawSkin = true;
 			invalidateProperties();
+		}
+
+		public function get fill():uint
+		{
+			return _fill;
+		}
+
+		public function set fill(value:uint):void
+		{
+			_fill = value;
 		}
 
 

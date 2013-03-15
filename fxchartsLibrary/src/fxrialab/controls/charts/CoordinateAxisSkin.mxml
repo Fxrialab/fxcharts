@@ -27,19 +27,19 @@
 				
 				//set text format for label field
 				var horizontalFormat:TextFormat = new TextFormat();
-				horizontalFormat.size = getStyle('size');
-				horizontalFormat.font = getStyle('font');
+				horizontalFormat.size = getStyle('sizeDefault');
+				horizontalFormat.font = getStyle('fontDefault');
 				horizontalFormat.align = getStyle('rightAlign');
 				
 				var verticalFormat:TextFormat = new TextFormat();
-				verticalFormat.size = getStyle('size');
-				verticalFormat.font = getStyle('font');
+				verticalFormat.size = getStyle('sizeDefault');
+				verticalFormat.font = getStyle('fontDefault');
 				verticalFormat.align = getStyle('leftAlign');
 				
 				var titleFormat:TextFormat = new TextFormat();
 				titleFormat.size = getStyle('titleSize');
 				titleFormat.font = getStyle('titleFont');
-				titleFormat.align = getStyle('titleAlign');
+				titleFormat.align = getStyle('alignDefault');
 				
 				var titleLabel:TextField = new TextField();
 				titleLabel.text = String(hostComponent.title);

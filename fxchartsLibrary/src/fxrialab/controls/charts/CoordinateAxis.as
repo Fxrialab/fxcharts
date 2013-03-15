@@ -7,13 +7,6 @@ package fxrialab.controls.charts
 	
 	import spark.components.supportClasses.SkinnableComponent;
 	
-	[Style(name="font", inherit="yes", type="String")]
-	[Style(name="size", inherit="yes", type="Number")]
-	[Style(name="leftAlign", inherit="yes", type="String")]
-	[Style(name="rightAlign", inherit="yes", type="String")]
-	[Style(name="titleSize", inherit="yes", type="Number")]
-	[Style(name="titleFont", inherit="yes", type="String")]
-	[Style(name="titleAlign", inherit="yes", type="String")]
 	public class CoordinateAxis extends SkinnableComponent
 	{
 		private var _dataProvider:IList;
@@ -38,15 +31,6 @@ package fxrialab.controls.charts
 		{
 			super();
 			setStyle("skinClass", CoordinateAxisSkin);
-
-			this.setStyle('font','Time New Normal');
-			this.setStyle('size',6);
-			this.setStyle('leftAlign', 'left');
-			this.setStyle('rightAlign', 'right');
-			
-			this.setStyle('titleSize',10);
-			this.setStyle('titleFont','Time New Normal');
-			this.setStyle('titleAlign', 'center');
 		}	
 
 		public function get dataProvider():IList

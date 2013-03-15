@@ -2,6 +2,8 @@ package fxrialab.controls.charts
 {
 	import flash.display.DisplayObject;
 	
+	import fxrialab.utils.ArrayUtilities;
+	
 	import mx.charts.PieChart;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
@@ -12,6 +14,13 @@ package fxrialab.controls.charts
 	
 	[Style(name="coordinateClass",inherit="no",type="Class")]
 	
+	[Style(name="fontDefault", inherit="yes", type="String")]
+	[Style(name="sizeDefault", inherit="yes", type="Number")]
+	[Style(name="alignDefault", inherit="yes", type="String")]
+	[Style(name="leftAlign", inherit="yes", type="String")]
+	[Style(name="rightAlign", inherit="yes", type="String")]
+	[Style(name="titleSize", inherit="yes", type="Number")]
+	[Style(name="titleFont", inherit="yes", type="String")]
 	public class FxChart extends UIComponent
 	{
 		public static const HORIZONTAL_BAR:String = 'horizontalBar';
@@ -19,6 +28,8 @@ package fxrialab.controls.charts
 		public static const LINE:String = 'line';
 		public static const PIE:String = 'pie';
 		public static const DOUGHNUT:String = 'doughnut';
+		public static const CLUSTERED:String = 'clustered';
+		public static const STACKED:String = 'stacked';
 		
 		private var _showCoordinate:Boolean = false;
 		private var _dataProvider:IList;
@@ -31,9 +42,10 @@ package fxrialab.controls.charts
 		private var _labelField:String = "label";
 		private var _fillField:String = "fill";
 		private var _strokeField:String = "stroke";
-		private var _gap:Number = 10;
+		private var _gap:Number = 20;
 		private var _offSet:Number = 10;
-		private var _title:String;
+		private var _titleField:String = "title";
+		private var _config:Array;
 		private var _marginTop:Number = 30;
 		private var _marginRight:Number = 10;
 		private var _marginBottom:Number = 10;
@@ -46,11 +58,35 @@ package fxrialab.controls.charts
 		private var chart:DisplayObject;
 		private var maxValue:Number;
 		private var minValue:Number;
+		private var barWidth:Number;
+		private var barHeight:Number;
+		
+		private var barShift:Number = 0;
 		
 		public function FxChart()
 		{
 			super();
 			setStyle('coordinateClass', CoordinateAxis);
+			
+			this.setStyle('fontDefault','Arial');
+			this.setStyle('sizeDefault',7);
+			this.setStyle('alignDefault', 'center');
+			
+			this.setStyle('leftAlign', 'left');
+			this.setStyle('rightAlign', 'right');
+			
+			this.setStyle('titleSize',10);
+			this.setStyle('titleFont','Time New Normal');
+		}
+		
+		public function get config():Array
+		{
+			return _config;
+		}
+		
+		public function set config(value:Array):void
+		{
+			_config = value;
 		}
 		
 		public function get dataProvider():IList
@@ -58,9 +94,17 @@ package fxrialab.controls.charts
 			return _dataProvider;
 		}
 		
-		public var positiveValueArrays:Array = [];
-		public var negativeValueArrays:Array = [];
+		private var positiveValueArrays:Array = [];
+		private var negativeValueArrays:Array = [];
 		public var listLengthOfLine:Array = [];
+		private var seriesChartNumber:Array = [];
+		private var valueOfSeriesBar:Array = [];
+		private var labelOfSeriesBar:Array = [];
+		private var sumValueStackedBar:Array = [];
+		private var fillOfStackedBar:Array = [];
+		private var titleOfStackedBar:Array = [];
+		
+		private var dataProviderOfStackedBar:IList = new ArrayList();
 		
 		public function set dataProvider(value:IList):void
 		{
@@ -74,9 +118,13 @@ package fxrialab.controls.charts
 			for (var i:int = 0; i < dataProvider.length; i++)
 			{
 				var type:String = (dataProvider.getItemAt(i) as Object)[typeField];
+				//var fill:String = (dataProvider.getItemAt(i) as Object)[fillField];
+				var getFill:String = ((dataProvider.getItemAt(i) as Object)[fillField] == null) ? "0xDC2400" : (dataProvider.getItemAt(i) as Object)[fillField];
+				var fill:uint = (getFill.search('#') == 0) ? uint(getFill.replace('#', '0x')) : uint(getFill);
 				var stroke:String = (dataProvider.getItemAt(i) as Object)[strokeField];
+				var title:String = (dataProvider.getItemAt(i) as Object)[labelField];
 				var data:Object = (dataProvider.getItemAt(i) as Object)[_dataSeriesField];
-				charts.addItem( { type: type, stroke: stroke, data: data } );
+				charts.addItem( { type: type, fill: fill, stroke: stroke, data: data } );
 				//get min, max for arrays
 				var dataItemsChart:Object = dataProvider.getItemAt(i);
 				var itemsData:IList = new ArrayList(dataItemsChart[_dataSeriesField] as Array);
@@ -89,49 +137,101 @@ package fxrialab.controls.charts
 					listLengthOfLine.push(itemsData.length);
 				}
 				for (var k:int = 0; k < itemsData.length; k++) {
-					var getDataValue:Object = itemsData.getItemAt(k);
+					var getDataSeries:Object = itemsData.getItemAt(k);
 					//calc += getDataValue[valueField];
 					
-					if(getDataValue[valueField] >= 0 && listLengthOfLine[0] == itemsData.length) {
-						positiveValueArrays.push(getDataValue[valueField]);
-					}
+					if(getDataSeries[valueField] >= 0 && listLengthOfLine[0] == itemsData.length)
+						positiveValueArrays.push(getDataSeries[valueField]);
 					
-					if(getDataValue[valueField] < 0 && listLengthOfLine[0] == itemsData.length){
-						negativeValueArrays.push(getDataValue[valueField]);
+					if(getDataSeries[valueField] < 0 && listLengthOfLine[0] == itemsData.length)
+						negativeValueArrays.push(getDataSeries[valueField]);
+					
+					if(type == HORIZONTAL_BAR && listLengthOfLine[0] == itemsData.length) {
+						labelOfSeriesBar.push(getDataSeries[labelField]);
+						valueOfSeriesBar.push(getDataSeries[valueField]);
+						fillOfStackedBar.push(fill);
+						titleOfStackedBar.push(title);
 					}
 				}
 				//positiveValueArray.push(calc);
-				
+				if(type == HORIZONTAL_BAR && listLengthOfLine[0] == itemsData.length) {
+					seriesChartNumber.push(HORIZONTAL_BAR);
+				}else if(type == VERTICAL_BAR && listLengthOfLine[0] == itemsData.length) {
+					seriesChartNumber.push(VERTICAL_BAR);
+				}
 			}
+			
+			var numberSeries:Number = seriesChartNumber.length;
+			var keyArrays:Array = ArrayUtilities.checkLabelOfSeries(labelOfSeriesBar, numberSeries, listLengthOfLine[0]);
+			ArrayUtilities.groupValue(keyArrays.sort(Array.NUMERIC));
+			ArrayUtilities.findDifficultValue(labelOfSeriesBar, keyArrays);
+			ArrayUtilities.findDifficultValue(valueOfSeriesBar, keyArrays);
+			ArrayUtilities.findDifficultValue(fillOfStackedBar, keyArrays);
+			ArrayUtilities.findDifficultValue(titleOfStackedBar, keyArrays);
+			
+			//labelOfSeriesBar.splice(listLengthOfLine[0], labelOfSeriesBar.length - listLengthOfLine[0]);
+			sumValueStackedBar = ArrayUtilities.sumSameKeyArray(valueOfSeriesBar, valueOfSeriesBar.length/listLengthOfLine[0]);
+			//var numberItems:Array = ArrayUtilities.groupValue(labelOfSeriesBar);
+			
+			var dataSeriesOfStackedBar:Array;
+			var obj:Object;
+			for (i = 0; i < labelOfSeriesBar.length; i++) {
+				if (i % listLengthOfLine[0] == 0){
+					dataSeriesOfStackedBar = new Array();
+					dataProviderOfStackedBar.addItem(dataSeriesOfStackedBar);
+				}
+				obj = new Object;
+				obj['label'] = labelOfSeriesBar[i];
+				obj['value'] = valueOfSeriesBar[i];
+				obj['fill'] = fillOfStackedBar[i];
+				obj['sum'] = sumValueStackedBar[i];
+				
+				dataSeriesOfStackedBar.push(obj);
+			}
+
+			trace(valueOfSeriesBar);
+			trace(labelOfSeriesBar);
+			trace(sumValueStackedBar);
 		}
+		
+		private var typeOfBar:String;
 		
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
 			
+			if(config.length == 1) {
+				typeOfBar = config[0][typeField];
+				
+				if(typeOfBar == null || typeOfBar != CLUSTERED && typeOfBar != STACKED)
+					typeOfBar = CLUSTERED;
+			}
+			trace('typebar', typeOfBar);
 			for (var i:int = 0; i < charts.length; i++)
 			{
 				var chartDataItem:Object = charts.getItemAt(i);
 				var chartType:String = String(chartDataItem[typeField]);
 				var dataItems:IList = new ArrayList(chartDataItem[_dataSeriesField] as Array);
-				
+				//trace(dataItems);
 				var chartFirstDataItem:Object = charts.getItemAt(0);
 				var chartFirstType:String = String(chartFirstDataItem[typeField]);
 				var firstDataItems:IList = new ArrayList(chartFirstDataItem[_dataSeriesField] as Array);
-				
+				//trace('num chart', chartType.length);
 				//set number point for line
 				var lineChartDefault:Number = listLengthOfLine[0];
 				//get min vs max value
 				if (positiveValueArrays && positiveValueArrays.length > 0) {
-					var getMaxValue:Number = findMax(positiveValueArrays);
+					var getMaxValue:Number = (typeOfBar == STACKED) ? findMax(sumValueStackedBar) : findMax(positiveValueArrays);
 					maxValue = getMaxValue + 30;
 				}
 				if (negativeValueArrays && negativeValueArrays.length > 0) {
 					var getMinValue:Number = findMin(negativeValueArrays);
 					var getNumberLandMark:Number = -getMinValue/(maxValue/numberLineLandMarkDefault);
-					numberLineLandMarkForNegativeAxis = int(getNumberLandMark) + 1;
+					numberLineLandMarkForNegativeAxis = int(getNumberLandMark) + 2;
 					minValue = (maxValue/numberLineLandMarkDefault) * numberLineLandMarkForNegativeAxis;
 				}
+				
+				//trace(ArrayUtilities.groupValue(titleOfStackedBar));
 				//draw axis 
 				if (i == 0)
 				{
@@ -182,8 +282,12 @@ package fxrialab.controls.charts
 									coordinateAxis["minValue"] = minValue;
 									coordinateAxis['numberLineLandMarkForNegativeAxis'] = numberLineLandMarkForNegativeAxis;
 								}
-			
-								coordinateAxis["title"] = title;
+								
+								if(config.length == 1){
+									var title:String = config[0][titleField];
+									var titleDefault:String = 'Please add title to config of chart';
+									coordinateAxis["title"] = (title || title !='') ? title : titleDefault;
+								}								
 								coordinateAxis['marginTop'] = marginTop;
 								coordinateAxis['marginRight'] = marginRight;
 								coordinateAxis['marginBottom'] = marginBottom;
@@ -196,9 +300,13 @@ package fxrialab.controls.charts
 						}
 					}
 				}
-				//trace(lineChartDefault);
+				
+				//trace(width);
+				barWidth = ((width - (marginRight + marginLeft)) - (offSet *2 + gap*(lineChartDefault - 1)))/(lineChartDefault);
+				//trace('barWidth1',barWidth);
 				//draw charts
 				var chart:DisplayObject = generateChart(chartDataItem);
+				//var barshift:Number = 0;
 				if (chart is LineChart)
 				{
 					(chart as LineChart).direction = orientation;
@@ -216,7 +324,14 @@ package fxrialab.controls.charts
 									addChild(chart);
 								}
 							}else if(chartType == HORIZONTAL_BAR){
-								addChild(chart);
+								if(dataItems.length == lineChartDefault) {
+									
+									if(typeOfBar && typeOfBar == CLUSTERED){
+										barShift += barWidth/seriesChartNumber.length;
+										chart.x = barShift;	
+									}
+									addChild(chart);
+								}		
 							}
 						}
 					}
@@ -239,7 +354,7 @@ package fxrialab.controls.charts
 						addChild(chart);
 					}
 				}
-				
+	
 			}
 		
 		}
@@ -271,13 +386,17 @@ package fxrialab.controls.charts
 		protected function generateChart(data:Object):DisplayObject
 		{
 			var chartType:String = String(data[typeField]);
+			//var getFill:String = (data[fillField] == null) ? "0xDC2400" : data[fillField];
+			var fill:uint = uint(data[fillField]);
 			var dataItems:IList = new ArrayList(data[_dataSeriesField] as Array);
-			
+			trace("number series:", seriesChartNumber.length);
+			var dd:IList = new ArrayList(data['dataStacked'] as Array);
 			switch (chartType)
 			{
 				case VERTICAL_BAR: 
 					chart = new VBarChart();
 					(chart as VBarChart).dataProvider = dataItems;
+					(chart as VBarChart).fill = fill;
 					(chart as VBarChart).gap = gap;
 					(chart as VBarChart).offSet = offSet;
 					(chart as VBarChart).marginTop = marginTop;
@@ -294,13 +413,16 @@ package fxrialab.controls.charts
 					break;
 				case HORIZONTAL_BAR: 
 					chart = new HBarChart();
-					(chart as HBarChart).dataProvider = dataItems;
+					(chart as HBarChart).dataProvider = (typeOfBar == STACKED) ? dataProviderOfStackedBar : dataItems;
+					(chart as HBarChart).fill = fill;
 					(chart as HBarChart).gap = gap;
 					(chart as HBarChart).offSet = offSet;
 					(chart as HBarChart).marginTop = marginTop;
 					(chart as HBarChart).marginRight = marginRight;
 					(chart as HBarChart).marginBottom = marginBottom;
 					(chart as HBarChart).marginLeft = marginLeft;
+					(chart as HBarChart).seriesChartNumber = seriesChartNumber.length;
+					(chart as HBarChart).barWidth = barWidth;
 					//call max value & min value 
 					if (positiveValueArrays && positiveValueArrays.length > 0){
 						(chart as HBarChart).maxValue = maxValue;
@@ -308,6 +430,27 @@ package fxrialab.controls.charts
 					if (negativeValueArrays && negativeValueArrays.length > 0){
 						(chart as HBarChart).minValue = minValue;
 					}
+					(chart as HBarChart).type = typeOfBar;
+					//set type for bar
+					//trace("type of bar", typeOfBar);
+					//if (typeOfBar == STACKED) {
+						/*(chart as HBarChart).valueForStackedBar = valueOfSeriesBar;
+						(chart as HBarChart).labelForStackedBar = labelOfSeriesBar;
+						(chart as HBarChart).sumValueForStackedBar = sumValueStackedBar;
+						(chart as HBarChart).fillForStackedBar = ArrayUtilities.groupValue(fillOfStackedBar);
+						(chart as HBarChart).titleForStackedBar = ArrayUtilities.groupValue(titleOfStackedBar);*/
+					//}
+					
+					
+					/*for(var a:int=0;a<dataItems.length;a++){
+						var d:Object = dataItems.getItemAt(a);
+						for(var key:String in d){
+							if(d[key] instanceof Number)
+								trace(d[key]);
+						}
+					}*/
+					
+
 					break;
 				case LINE: 
 					var getLineStroke:String = String(data[strokeField]);
@@ -433,14 +576,14 @@ package fxrialab.controls.charts
 			_offSet = value;
 		}
 		
-		public function get title():String
+		public function get titleField():String
 		{
-			return _title;
+			return _titleField;
 		}
 		
-		public function set title(value:String):void
+		public function set titleField(value:String):void
 		{
-			_title = value;
+			_titleField = value;
 		}
 		
 		public function get fillField():String
@@ -536,7 +679,7 @@ package fxrialab.controls.charts
 			redrawSkin = true;
 			invalidateProperties();
 		}
-
+		
 		
 	}
 }

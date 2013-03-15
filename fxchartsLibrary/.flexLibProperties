@@ -20,6 +20,9 @@
     <classEntry path="fxrialab.controls.charts.FxChart"/>
     <classEntry path="fxrialab.controls.charts.PieSprite"/>
     <classEntry path="fxrialab.controls.charts.LineSprite"/>
+    <classEntry path="fxrialab.controls.charts.legend.DefaultLegendRenderer"/>
+    <classEntry path="fxrialab.utils.ArrayUtilities"/>
+    <classEntry path="fxrialab.controls.charts.HBarStackedSprite"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

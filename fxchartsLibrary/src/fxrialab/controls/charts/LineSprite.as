@@ -59,7 +59,7 @@ package fxrialab.controls.charts
 			}
 		}
 		
-		public var tooltip:Sprite;
+		private var tooltip:Sprite;
 		
 		
 		public function showTooltip():void {
@@ -68,9 +68,9 @@ package fxrialab.controls.charts
 			var txtFormatTooltip:TextFormat = new TextFormat();
 			//var calcPercent:Number = (data.value/data.sumValue * 100);
 			
-			txtFormatTooltip.align = 'left';
-			txtFormatTooltip.font = 'Arial';
-			txtFormatTooltip.size = 8;
+			txtFormatTooltip.align = data.align;
+			txtFormatTooltip.font = data.font;
+			txtFormatTooltip.size = data.size;
 			txtFormatTooltip.color = 0xFFFFFF;
 			txtFormatTooltip.leftMargin = txtFormatTooltip.rightMargin = 2;
 			
