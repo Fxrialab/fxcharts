@@ -20,14 +20,28 @@
 					{label:'Doctor', value: 64},
 					{label:'Teacher', value: 85},
 					{label:'Engineer', value: 98}
-				]} 
+				]}  ,   
+				 {type:'horizontalBar', fill:'#CC0000', label: 'Title of bar2', data:[
+					{label:'IT', value: 63},
+					{label:'Business', value: 46},
+					{label:'Doctor', value: 38},
+					{label:'Teacher', value: 51},
+					{label:'Engineer', value: 24}
+				]} ,
+				{type:'horizontalBar', fill:'#EEAAFF', label: 'Title of bar3', data:[
+					{label:'IT', value: 37},
+					{label:'Business', value: 58},
+					{label:'Doctor', value: 48},
+					{label:'Teacher', value: 14},
+					{label:'Engineer', value: 28}
+				]}
 			]);
 			[Bindable]
-			public var config:Array = [{title: 'Example charts demo'}];
+			public var config:Array = [{type: 'stacked', title: 'Example charts demo'}];
 		]]>
 	</fx:Script>
 	
-	<charts:FxChart x="50" width="400" height="500" dataProvider="{chartsData}"
+	<charts:FxChart x="50" width="200" height="300" dataProvider="{chartsData}"
 					 config="{config}" />
 	<legend:FxLegend x="50" y="350" dataProvider="{chartsData}"
 					 itemRenderer="fxrialab.controls.charts.legend.DefaultLegendRenderer"

@@ -14,20 +14,27 @@
 			import mx.collections.IList;
 			[Bindable]
 			public var chartsData:IList = new ArrayList([
-				{type:'doughnut', data:[
-					{label:'IT', value: 50, fill: '0x6600CC'},
-					{label:'Business', value: 46, fill: '0xff00CC'},
-					{label:'Doctor in the hospital ddsfdsfd', value: 64, fill: '0x00xzCC'},
-					{label:'Teacher', value: 85, fill: '0xDA00CC'},
-					{label:'Engineeresa', value: 75, fill: '0xaa32CC'}
-				]} 
+				{type:'verticalBar', fill:'#aa32CC', label: 'Title of bar1', data:[
+					{label:'IT', value: 50},
+					{label:'Business', value: 46},
+					{label:'Doctor', value: 64},
+					{label:'Teacher', value: 85},
+					{label:'Engineer', value: 98}
+				]},
+				{type:'verticalBar', fill:'#00ffAA', label: 'Title of bar2', data:[
+					{label:'Man United', value: 49},
+					{label:'Chelsea', value: 12},
+					{label:'Asenal', value: 100},
+					{label:'Man City', value: 20},
+					{label:'Livepool', value: 50}
+				]}
 			]);
 			[Bindable]
-			public var config:Array = [{title: 'Example charts demo'}];
+			public var config:Array = [{type: 'clustered', title: 'Example charts demo'}];
 		]]>
 	</fx:Script>
 	
-	<charts:FxChart x="50" width="400" height="500" dataProvider="{chartsData}"
+	<charts:FxChart x="50" width="200" height="300" dataProvider="{chartsData}"
 					 config="{config}" />
 	<legend:FxLegend x="50" y="350" dataProvider="{chartsData}"
 					 itemRenderer="fxrialab.controls.charts.legend.DefaultLegendRenderer"

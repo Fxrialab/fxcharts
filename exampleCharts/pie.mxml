@@ -2,27 +2,35 @@
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
-			   xmlns:myComp="fxrialab.controls.charts.*"
-			   xmlns:charts="fxrialab.controls.charts.legend.*">
+			   xmlns:charts="fxrialab.controls.charts.*"
+			   xmlns:legend="fxrialab.controls.charts.legend.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
 			import mx.collections.ArrayList;
 			import mx.collections.IList;
 			[Bindable]
 			public var chartsData:IList = new ArrayList([
 				{type:'pie', data:[
-					{label:'Networking', value: 50, fill: '#DDCAWA'},
-					{label:'Programing', value: 46, fill: '#DDAACC'},
-					{label:'Marketing', value: 64, fill: '#EE22DD'} 
+					{label:'IT', value: 50, fill: '0x6600CC'},
+					{label:'Business', value: 46, fill: '0xff00CC'},
+					{label:'Doctor in the hospital ddsfdsfd', value: 64, fill: '0x00xzCC'},
+					{label:'Teacher', value: 85, fill: '0xDA00CC'},
+					{label:'Engineeresa', value: 75, fill: '0xaa32CC'}
 				]} 
 			]);
+			[Bindable]
+			public var config:Array = [{title: 'Example charts demo'}];
 		]]>
 	</fx:Script>
 	
-	<myComp:FxChart x="100" y="20" width="200" height="300" dataProvider="{chartsData}"
-					title="Example charts demo"/> 
+	<charts:FxChart x="50" width="400" height="500" dataProvider="{chartsData}"
+					 config="{config}" />
+	<legend:FxLegend x="50" y="350" dataProvider="{chartsData}"
+					 itemRenderer="fxrialab.controls.charts.legend.DefaultLegendRenderer"
+					 orientation="horizontalLayout" />
 	
 </s:Application>

@@ -14,13 +14,20 @@
 			import mx.collections.IList;
 			[Bindable]
 			public var chartsData:IList = new ArrayList([
-				{type:'doughnut', data:[
-					{label:'IT', value: 50, fill: '0x6600CC'},
-					{label:'Business', value: 46, fill: '0xff00CC'},
-					{label:'Doctor in the hospital ddsfdsfd', value: 64, fill: '0x00xzCC'},
-					{label:'Teacher', value: 85, fill: '0xDA00CC'},
-					{label:'Engineeresa', value: 75, fill: '0xaa32CC'}
-				]} 
+				{type:'horizontalBar', fill:'#aa32CC', label: 'Title of bar1', data:[
+					{label:'IT', value: 50},
+					{label:'Business', value: 46},
+					{label:'Doctor', value: 64},
+					{label:'Teacher', value: 85},
+					{label:'Engineer', value: 98}
+				]}, 
+				{type:'line', stroke:'#00FF44', label: 'Title of line', data:[
+					{label:'Google', value: 30},
+					{label:'Facebook', value: 120},
+					{label:'Apple', value: 40},
+					{label:'IBM', value: 50},
+					{label:'Sonny', value: 80}
+				]}
 			]);
 			[Bindable]
 			public var config:Array = [{title: 'Example charts demo'}];
