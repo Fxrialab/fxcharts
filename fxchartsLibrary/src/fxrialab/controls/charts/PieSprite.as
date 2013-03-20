@@ -13,6 +13,9 @@ package fxrialab.controls.charts
 	
 	import fxrialab.utils.DrawHelper;
 	
+	import mx.core.IUITextField;
+	import mx.core.UIComponent;
+	
 	public class PieSprite extends Sprite
 	{
 		public function PieSprite()
@@ -187,6 +190,7 @@ package fxrialab.controls.charts
 		
 		public var tooltip:Sprite;
 		public var txtFieldTooltip:TextField;
+		//private var txtToolTip:IUITextField = IUITextField(createInFontContext(IUITextField));
 		
 		public function showTooltip():void {
 			
@@ -200,14 +204,15 @@ package fxrialab.controls.charts
 			txtFormatTooltip.color = 0xFFFFFF;
 			txtFormatTooltip.leftMargin = txtFormatTooltip.rightMargin = 2;
 			
+			txtFieldTooltip.defaultTextFormat = txtFormatTooltip;
 			txtFieldTooltip.selectable = false;
 			txtFieldTooltip.height = 20;
-			txtFieldTooltip.wordWrap = true;
-			txtFieldTooltip.multiline = true;
-			txtFieldTooltip.text = data.label +":"+ calcPercent.toFixed(2) + "%";
+			txtFieldTooltip.autoSize = 'left';
+			txtFieldTooltip.htmlText = String(data.label +":"+ calcPercent.toFixed(2) + "%");
 			txtFieldTooltip.setTextFormat(txtFormatTooltip);
 
 			tooltip = DrawHelper.Tooltip(txtFieldTooltip.textWidth + 8, txtFieldTooltip.height, 0x1a8948);
+
 			tooltip.addChild(txtFieldTooltip);
 			
 			var p:Point = new Point(this.mouseX, this.mouseY);

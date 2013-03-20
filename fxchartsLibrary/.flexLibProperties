@@ -23,6 +23,7 @@
     <classEntry path="fxrialab.controls.charts.legend.DefaultLegendRenderer"/>
     <classEntry path="fxrialab.utils.ArrayUtilities"/>
     <classEntry path="fxrialab.controls.charts.HBarStackedSprite"/>
+    <classEntry path="fxrialab.controls.charts.VBarStackedSprite"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

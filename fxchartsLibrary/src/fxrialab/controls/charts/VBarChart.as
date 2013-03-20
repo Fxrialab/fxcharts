@@ -2,6 +2,7 @@ package fxrialab.controls.charts
 {
 	import flash.display.Sprite;
 	
+	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.core.UIComponent;
 	
@@ -19,6 +20,7 @@ package fxrialab.controls.charts
 		private var _fillField:String = "fill";
 		private var _data:Object;
 		private var _fill:uint;
+		private var _type:String;
 		
 		private var _marginTop:Number;
 		private var _marginRight:Number;
@@ -27,6 +29,8 @@ package fxrialab.controls.charts
 		
 		private var _maxValue:Number;
 		private var _minValue:Number;
+		private var _barHeight:Number;
+		private var _seriesChartNumber:Number;
 		
 		public var vBars:Array = [];
 		
@@ -76,12 +80,26 @@ package fxrialab.controls.charts
 					vBarHolder.removeChild(vBar);
 				}
 				vBars = [];
-				for (i = 0; i < dataProvider.length; i++) {
-					var vbsp:VBarSprite = new VBarSprite();
-					vbsp.data = dataProvider.getItemAt(i);
-					vBarHolder.addChild(vbsp);
-					vBars.push(vbsp);
+				if (type == FxChart.STACKED) {
+					for(i=0; i < dataProvider.length; i++) {
+						var arr:IList = new ArrayList(dataProvider.getItemAt(i) as Array);
+						for (var j:int=0; j < arr.length; j++) {
+							var sbsp:VBarStackedSprite = new VBarStackedSprite();
+							sbsp.data = arr.getItemAt(j);
+							
+							vBarHolder.addChild(sbsp);
+							vBars.push(sbsp);
+						}
+					}
+				}else {
+					for (i = 0; i < dataProvider.length; i++) {
+						var vbsp:VBarSprite = new VBarSprite();
+						vbsp.data = dataProvider.getItemAt(i);
+						vBarHolder.addChild(vbsp);
+						vBars.push(vbsp);
+					}
 				}
+				
 				
 				if(skin){
 					skin.invalidateProperties();
@@ -94,39 +112,64 @@ package fxrialab.controls.charts
 		{
 			super.updateDisplayList(w, h);
 			
-			var barHeight:Number;
-			for(var i:int=0; i < dataProvider.length; i++){	
-				//update data
-				var bar:VBarSprite = vBars[i] as VBarSprite;
-				bar.data = dataProvider.getItemAt(i);
-				bar.data.sumValue = sumValue;
-				
-				/*var getFill:String = (dataProvider.getItemAt(i) as Object)[fillField];
-				if (getFill) {
-					var fillEachBar:uint = (getFill.search('#') == 0) ? uint(getFill.replace('#', '0x')) : uint(getFill);
-				}*/
-				bar.data.font = getStyle('fontDefault');
-				bar.data.size = getStyle('sizeDefault');
-				bar.data.align = getStyle('leftAlign');
-				bar.data.fill = fill;
-				
-				bar.data.gapCalc = _gap * i;
-				bar.data.offSet = _offSet;
-				bar.data.width = w;
-				bar.data.height = h;
-				bar.data.marginTop = marginTop;
-				bar.data.marginLeft = marginLeft;
-				bar.data.marginBottom = marginBottom;
-				
-				barHeight = (h - (marginBottom + marginTop) - (_offSet * 2 + _gap * (dataProvider.length - 1))) / dataProvider.length;
-				
-				bar.data.barHeightCalc = barHeight*i;
-				bar.data.barHeight = barHeight;
-				
-				bar.data.maxValue = maxValue;
-				bar.data.minValue = minValue;
-				//draw
-				bar.draw();
+			if (type == FxChart.STACKED) {
+				for(var i:int=0; i < dataProvider.length; i++){
+					var arrList:IList = new ArrayList(dataProvider.getItemAt(i) as Array);
+					for (var j:int=0; j < arrList.length; j++) {
+						//update data
+						var sbar:VBarStackedSprite = vBars[j] as VBarStackedSprite;
+						sbar.data = arrList.getItemAt(j);
+						
+						sbar.data.font = getStyle('fontDefault');
+						sbar.data.size = getStyle('sizeDefault');
+						sbar.data.align = getStyle('leftAlign');
+						
+						sbar.data.gapCalc = _gap * j;
+						sbar.data.offSet = _offSet;
+						
+						sbar.data.width = w;
+						sbar.data.height = h;
+						sbar.data.barHeight = barHeight;
+						sbar.data.barHeightCalc = barHeight * j;
+						
+						sbar.data.maxValue = maxValue;
+						sbar.data.minValue = minValue;
+						sbar.data.marginTop = marginTop;
+						sbar.data.marginLeft = marginLeft;
+						sbar.data.marginBottom = marginBottom;
+						//draw
+						sbar.draw();
+					}
+				}
+			}else {
+				for(i=0; i < dataProvider.length; i++){	
+					//update data
+					var bar:VBarSprite = vBars[i] as VBarSprite;
+					bar.data = dataProvider.getItemAt(i);
+					bar.data.sumValue = sumValue;
+
+					bar.data.font = getStyle('fontDefault');
+					bar.data.size = getStyle('sizeDefault');
+					bar.data.align = getStyle('leftAlign');
+					bar.data.fill = fill;
+					
+					bar.data.gapCalc = _gap * i;
+					bar.data.offSet = _offSet;
+					
+					bar.data.width = w;
+					bar.data.height = h;
+					bar.data.seriesChartNum = seriesChartNumber;
+					bar.data.barHeight = (type == FxChart.CLUSTERED) ? barHeight/seriesChartNumber : barHeight;
+					bar.data.barHeightCalc = barHeight * i;
+					
+					bar.data.maxValue = maxValue;
+					bar.data.minValue = minValue;
+					bar.data.marginTop = marginTop;
+					bar.data.marginLeft = marginLeft;
+					bar.data.marginBottom = marginBottom;
+					//draw
+					bar.draw();
+				}
 			}
 		}
 		
@@ -276,6 +319,42 @@ package fxrialab.controls.charts
 		public function set fill(value:uint):void
 		{
 			_fill = value;
+		}
+
+		public function get barHeight():Number
+		{
+			return _barHeight;
+		}
+
+		public function set barHeight(value:Number):void
+		{
+			_barHeight = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+
+		public function get seriesChartNumber():Number
+		{
+			return _seriesChartNumber;
+		}
+
+		public function set seriesChartNumber(value:Number):void
+		{
+			_seriesChartNumber = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+
+		public function get type():String
+		{
+			return _type;
+		}
+
+		public function set type(value:String):void
+		{
+			_type = value;
+			redrawSkin = true;
+			invalidateProperties();
 		}
 
 

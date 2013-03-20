@@ -2,6 +2,7 @@ package fxrialab.controls.charts
 {
 	import flash.display.GradientType;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.text.TextField;
@@ -31,7 +32,7 @@ package fxrialab.controls.charts
 		}
 		
 		public function draw():void {
-			trace('value: ',data.value);
+			//trace('value: ',data.value);
 			var gradType:String = GradientType.LINEAR;
 			var colors:Array = [data.fill, data.fill, data.fill];
 			var alphas:Array = [1, 0.6, 0.3];
@@ -47,7 +48,7 @@ package fxrialab.controls.charts
 			
 			bar.graphics.beginGradientFill(gradType, colors, alphas, ratios, matrix);
 			if(data.minValue){
-				bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom - data.minValue, data.barWidthr, data.value);
+				bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom - data.minValue, data.barWidth, data.value);
 			}else {
 				bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom, data.barWidth, data.value);
 			}
@@ -122,36 +123,46 @@ package fxrialab.controls.charts
 		}
 		
 		private var tooltip:Sprite;
+		public var txtFieldTooltip:TextField;
 		
 		public function showTooltip():void {
-			var txtFieldTooltip:TextField = new TextField();
+			txtFieldTooltip = new TextField();
 			var txtFormatTooltip:TextFormat = new TextFormat();
 			
-			txtFormatTooltip.align = data.align;
+			txtFormatTooltip.align = 'left';
 			txtFormatTooltip.font = data.font;
-			txtFormatTooltip.size = data.size;
+			txtFormatTooltip.size = 10;
 			txtFormatTooltip.color = 0xFFFFFF;
-			//txtFormatTooltip.leftMargin = txtFormatTooltip.rightMargin = 2;
+			txtFormatTooltip.leftMargin = txtFormatTooltip.rightMargin = 4;
 			
-			//txtFieldTooltip.selectable = false;
-			txtFieldTooltip.height = 15;
-			//txtFieldTooltip.wordWrap = true;
-			//txtFieldTooltip.multiline = true;
-			txtFieldTooltip.text = data.label +":"+ data.value;
+			txtFieldTooltip.defaultTextFormat = txtFormatTooltip;
+			txtFieldTooltip.selectable = false;
+			txtFieldTooltip.height = 20;
+			//txtFieldTooltip.autoSize = 'center';
+			txtFieldTooltip.htmlText = String(data.label +": "+ data.value);
 			txtFieldTooltip.setTextFormat(txtFormatTooltip);
 			
-			tooltip = DrawHelper.Tooltip(txtFieldTooltip.textWidth + 20, txtFieldTooltip.height, 0x1a8948);
+			tooltip = DrawHelper.Tooltip(txtFieldTooltip.textWidth + 8, txtFieldTooltip.height, 0x1a8948);
 			tooltip.addChild(txtFieldTooltip);
 			
 			var p:Point = new Point(this.mouseX, this.mouseY);
 			p = this.globalToLocal(p);
-			trace(this.mouseX);
-			trace('px', p.x);
+			//trace(this.mouseX);
+			//trace('px', p.x);
 			
-			tooltip.x = p.x + 180;
-			tooltip.y = p.y;
+			tooltip.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth;
+			tooltip.y = data.height - data.value - data.marginBottom;
 			trace('tt.x', tooltip.x);
 			this.stage.addChild(tooltip);
+			
+			this.addEventListener(MouseEvent.MOUSE_MOVE, moveTooltip, false, 0, true);
+		}
+		
+		private function moveTooltip(evt:MouseEvent):void {
+			if (tooltip) {
+				tooltip.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth;
+				tooltip.y = data.height - data.value - data.marginBottom;
+			}
 		}
 		
 		public function hideTooltip():void {

@@ -1,6 +1,8 @@
 package fxrialab.controls.charts
 {
+	import flash.display.GradientType;
 	import flash.display.Sprite;
+	import flash.geom.Matrix;
 	
 	public class HBarStackedSprite extends Sprite
 	{
@@ -24,9 +26,16 @@ package fxrialab.controls.charts
 		
 		public function draw():void 
 		{
-			//trace('data.value: ', data.value);
+			//@TODO: still fix gradient for stacked of horizontalBar
+			var gradType:String = GradientType.LINEAR;
+			var colors:Array = [data.fill, data.fill, data.fill];
+			var alphas:Array = [1, 0.6, 0.3];
+			var ratios:Array = [0, 30, 255];
+			var matrix:Matrix = new Matrix();
+			matrix.createGradientBox(data.barWidth, data.value, 90*(Math.PI/180), data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.sum - data.marginBottom);
+			
 			var bar:Sprite = new Sprite();
-			bar.graphics.beginFill(data.fill, 1);
+			bar.graphics.beginGradientFill(gradType, colors, alphas, ratios, matrix);
 			bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.sum - data.marginBottom, data.barWidth, data.value);
 			bar.graphics.endFill();
 			

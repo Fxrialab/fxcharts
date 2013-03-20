@@ -131,7 +131,6 @@ package fxrialab.controls.charts
 			super.updateDisplayList(w, h);
 			//trace(dataProvider.length);
 			if (type == FxChart.STACKED) {
-				var numberSeries:Number = valueForStackedBar.length/labelForStackedBar.length;
 				for (var i:int = 0; i < dataProvider.length; i++) {
 					var arrList:IList = new ArrayList(dataProvider.getItemAt(i) as Array);
 

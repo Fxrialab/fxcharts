@@ -79,16 +79,6 @@ package fxrialab.controls.charts
 			this.setStyle('titleFont','Time New Normal');
 		}
 		
-		public function get config():Array
-		{
-			return _config;
-		}
-		
-		public function set config(value:Array):void
-		{
-			_config = value;
-		}
-		
 		public function get dataProvider():IList
 		{
 			return _dataProvider;
@@ -105,6 +95,7 @@ package fxrialab.controls.charts
 		private var titleOfStackedBar:Array = [];
 		
 		private var dataProviderOfStackedBar:IList = new ArrayList();
+		public var typeOfBar:String;
 		
 		public function set dataProvider(value:IList):void
 		{
@@ -146,7 +137,7 @@ package fxrialab.controls.charts
 					if(getDataSeries[valueField] < 0 && listLengthOfLine[0] == itemsData.length)
 						negativeValueArrays.push(getDataSeries[valueField]);
 					
-					if(type == HORIZONTAL_BAR && listLengthOfLine[0] == itemsData.length) {
+					if(type == HORIZONTAL_BAR || type == VERTICAL_BAR && listLengthOfLine[0] == itemsData.length) {
 						labelOfSeriesBar.push(getDataSeries[labelField]);
 						valueOfSeriesBar.push(getDataSeries[valueField]);
 						fillOfStackedBar.push(fill);
@@ -160,53 +151,49 @@ package fxrialab.controls.charts
 					seriesChartNumber.push(VERTICAL_BAR);
 				}
 			}
-			
-			var numberSeries:Number = seriesChartNumber.length;
-			var keyArrays:Array = ArrayUtilities.checkLabelOfSeries(labelOfSeriesBar, numberSeries, listLengthOfLine[0]);
-			ArrayUtilities.groupValue(keyArrays.sort(Array.NUMERIC));
-			ArrayUtilities.findDifficultValue(labelOfSeriesBar, keyArrays);
-			ArrayUtilities.findDifficultValue(valueOfSeriesBar, keyArrays);
-			ArrayUtilities.findDifficultValue(fillOfStackedBar, keyArrays);
-			ArrayUtilities.findDifficultValue(titleOfStackedBar, keyArrays);
-			
-			//labelOfSeriesBar.splice(listLengthOfLine[0], labelOfSeriesBar.length - listLengthOfLine[0]);
-			sumValueStackedBar = ArrayUtilities.sumSameKeyArray(valueOfSeriesBar, valueOfSeriesBar.length/listLengthOfLine[0]);
-			//var numberItems:Array = ArrayUtilities.groupValue(labelOfSeriesBar);
-			
-			var dataSeriesOfStackedBar:Array;
-			var obj:Object;
-			for (i = 0; i < labelOfSeriesBar.length; i++) {
-				if (i % listLengthOfLine[0] == 0){
-					dataSeriesOfStackedBar = new Array();
-					dataProviderOfStackedBar.addItem(dataSeriesOfStackedBar);
-				}
-				obj = new Object;
-				obj['label'] = labelOfSeriesBar[i];
-				obj['value'] = valueOfSeriesBar[i];
-				obj['fill'] = fillOfStackedBar[i];
-				obj['sum'] = sumValueStackedBar[i];
-				
-				dataSeriesOfStackedBar.push(obj);
-			}
 
-			trace(valueOfSeriesBar);
-			trace(labelOfSeriesBar);
-			trace(sumValueStackedBar);
 		}
-		
-		private var typeOfBar:String;
-		
+
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
 			
 			if(config.length == 1) {
-				typeOfBar = config[0][typeField];
-				
-				if(typeOfBar == null || typeOfBar != CLUSTERED && typeOfBar != STACKED)
+				typeOfBar = String(config[0][typeField]);
+				if(typeOfBar == null || (typeOfBar != CLUSTERED && typeOfBar != STACKED))
 					typeOfBar = CLUSTERED;
+
+				trace('typebar', typeOfBar);
 			}
-			trace('typebar', typeOfBar);
+			
+			if (typeOfBar == STACKED) {
+				var numberSeries:Number = seriesChartNumber.length;
+				var keyArrays:Array = ArrayUtilities.checkLabelOfSeries(labelOfSeriesBar, numberSeries, listLengthOfLine[0]);
+				ArrayUtilities.groupValue(keyArrays.sort(Array.NUMERIC));
+				ArrayUtilities.findDifficultValue(labelOfSeriesBar, keyArrays);
+				ArrayUtilities.findDifficultValue(valueOfSeriesBar, keyArrays);
+				ArrayUtilities.findDifficultValue(fillOfStackedBar, keyArrays);
+				ArrayUtilities.findDifficultValue(titleOfStackedBar, keyArrays);
+				
+				sumValueStackedBar = ArrayUtilities.sumSameKeyArray(valueOfSeriesBar, valueOfSeriesBar.length/listLengthOfLine[0]);
+				
+				var dataSeriesOfStackedBar:Array;
+				var obj:Object;
+				for (i = 0; i < labelOfSeriesBar.length; i++) {
+					if (i % listLengthOfLine[0] == 0){
+						dataSeriesOfStackedBar = new Array();
+						dataProviderOfStackedBar.addItem(dataSeriesOfStackedBar);
+					}
+					obj = new Object;
+					obj['label'] = labelOfSeriesBar[i];
+					obj['value'] = valueOfSeriesBar[i];
+					obj['fill'] = fillOfStackedBar[i];
+					obj['sum'] = sumValueStackedBar[i];
+					
+					dataSeriesOfStackedBar.push(obj);
+				}
+			}
+			
 			for (var i:int = 0; i < charts.length; i++)
 			{
 				var chartDataItem:Object = charts.getItemAt(i);
@@ -302,7 +289,8 @@ package fxrialab.controls.charts
 				}
 				
 				//trace(width);
-				barWidth = ((width - (marginRight + marginLeft)) - (offSet *2 + gap*(lineChartDefault - 1)))/(lineChartDefault);
+				barWidth = ((width - (marginRight + marginLeft)) - (offSet *2 + gap * (lineChartDefault - 1)))/(lineChartDefault);
+				barHeight = ((height - (marginBottom + marginTop)) - (offSet * 2 + gap * (lineChartDefault - 1))) / lineChartDefault;
 				//trace('barWidth1',barWidth);
 				//draw charts
 				var chart:DisplayObject = generateChart(chartDataItem);
@@ -344,7 +332,14 @@ package fxrialab.controls.charts
 									addChild(chart);
 								}
 							}else if(chartType == VERTICAL_BAR){
-								addChild(chart);
+								if(dataItems.length == lineChartDefault) {
+									if (typeOfBar && typeOfBar == CLUSTERED) {
+										barShift += barHeight/seriesChartNumber.length;
+										chart.y = -barShift;
+									}
+									trace('chart.y', chart.y);
+									addChild(chart);
+								}
 							}
 						}
 						
@@ -395,7 +390,7 @@ package fxrialab.controls.charts
 			{
 				case VERTICAL_BAR: 
 					chart = new VBarChart();
-					(chart as VBarChart).dataProvider = dataItems;
+					(chart as VBarChart).dataProvider = (typeOfBar == STACKED) ? dataProviderOfStackedBar : dataItems;
 					(chart as VBarChart).fill = fill;
 					(chart as VBarChart).gap = gap;
 					(chart as VBarChart).offSet = offSet;
@@ -403,6 +398,9 @@ package fxrialab.controls.charts
 					(chart as VBarChart).marginRight = marginRight;
 					(chart as VBarChart).marginBottom = marginBottom;
 					(chart as VBarChart).marginLeft = marginLeft;
+					(chart as VBarChart).seriesChartNumber = seriesChartNumber.length;
+					(chart as VBarChart).barHeight = barHeight;
+					(chart as VBarChart).type = typeOfBar;
 					//call max value & min value 
 					if (positiveValueArrays && positiveValueArrays.length > 0){
 						(chart as VBarChart).maxValue = maxValue;
@@ -680,6 +678,17 @@ package fxrialab.controls.charts
 			invalidateProperties();
 		}
 		
+		public function get config():Array
+		{
+			return _config;
+		}
 		
+		public function set config(value:Array):void
+		{
+			_config = value;
+			redrawSkin = true;
+			invalidateProperties();
+			trace('config.length', config.length);
+		}
 	}
 }

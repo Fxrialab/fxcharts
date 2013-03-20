@@ -36,7 +36,7 @@ package fxrialab.utils
 				sum = 0;
 			}
 			var arr:Array = [];
-			trace(resultArray);
+			//trace(resultArray);
 			for (i =0; i < numberSeries; i++){
 				j = 0;
 				while (j < totalValue)
