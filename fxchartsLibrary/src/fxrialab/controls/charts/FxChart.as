@@ -33,7 +33,7 @@ package fxrialab.controls.charts
 		
 		private var _showCoordinate:Boolean = false;
 		private var _dataProvider:IList;
-		private var redrawSkin:Boolean = false;
+		public var redrawSkin:Boolean = false;
 		private var coordinateAxis:DisplayObject;
 		private var charts:IList = new ArrayList();
 		private var _typeField:String = "type";
@@ -69,7 +69,7 @@ package fxrialab.controls.charts
 			setStyle('coordinateClass', CoordinateAxis);
 			
 			this.setStyle('fontDefault','Arial');
-			this.setStyle('sizeDefault',7);
+			this.setStyle('sizeDefault',6);
 			this.setStyle('alignDefault', 'center');
 			
 			this.setStyle('leftAlign', 'left');
@@ -105,6 +105,7 @@ package fxrialab.controls.charts
 			_dataProvider = value;
 			redrawSkin = true;
 			invalidateProperties();
+			invalidateDisplayList();
 			
 			for (var i:int = 0; i < dataProvider.length; i++)
 			{
@@ -158,198 +159,202 @@ package fxrialab.controls.charts
 		{
 			super.commitProperties();
 			
-			if(config.length == 1) {
-				typeOfBar = String(config[0][typeField]);
-				if(typeOfBar == null || (typeOfBar != CLUSTERED && typeOfBar != STACKED))
-					typeOfBar = CLUSTERED;
-
-				trace('typebar', typeOfBar);
-			}
-			
-			if (typeOfBar == STACKED) {
-				var numberSeries:Number = seriesChartNumber.length;
-				var keyArrays:Array = ArrayUtilities.checkLabelOfSeries(labelOfSeriesBar, numberSeries, listLengthOfLine[0]);
-				ArrayUtilities.groupValue(keyArrays.sort(Array.NUMERIC));
-				ArrayUtilities.findDifficultValue(labelOfSeriesBar, keyArrays);
-				ArrayUtilities.findDifficultValue(valueOfSeriesBar, keyArrays);
-				ArrayUtilities.findDifficultValue(fillOfStackedBar, keyArrays);
-				ArrayUtilities.findDifficultValue(titleOfStackedBar, keyArrays);
-				
-				sumValueStackedBar = ArrayUtilities.sumSameKeyArray(valueOfSeriesBar, valueOfSeriesBar.length/listLengthOfLine[0]);
-				
-				var dataSeriesOfStackedBar:Array;
-				var obj:Object;
-				for (i = 0; i < labelOfSeriesBar.length; i++) {
-					if (i % listLengthOfLine[0] == 0){
-						dataSeriesOfStackedBar = new Array();
-						dataProviderOfStackedBar.addItem(dataSeriesOfStackedBar);
-					}
-					obj = new Object;
-					obj['label'] = labelOfSeriesBar[i];
-					obj['value'] = valueOfSeriesBar[i];
-					obj['fill'] = fillOfStackedBar[i];
-					obj['sum'] = sumValueStackedBar[i];
-					
-					dataSeriesOfStackedBar.push(obj);
-				}
-			}
-			
-			for (var i:int = 0; i < charts.length; i++)
+			if (redrawSkin == true)
 			{
-				var chartDataItem:Object = charts.getItemAt(i);
-				var chartType:String = String(chartDataItem[typeField]);
-				var dataItems:IList = new ArrayList(chartDataItem[_dataSeriesField] as Array);
-				//trace(dataItems);
-				var chartFirstDataItem:Object = charts.getItemAt(0);
-				var chartFirstType:String = String(chartFirstDataItem[typeField]);
-				var firstDataItems:IList = new ArrayList(chartFirstDataItem[_dataSeriesField] as Array);
-				//trace('num chart', chartType.length);
-				//set number point for line
-				var lineChartDefault:Number = listLengthOfLine[0];
-				//get min vs max value
-				if (positiveValueArrays && positiveValueArrays.length > 0) {
-					var getMaxValue:Number = (typeOfBar == STACKED) ? findMax(sumValueStackedBar) : findMax(positiveValueArrays);
-					maxValue = getMaxValue + 30;
-				}
-				if (negativeValueArrays && negativeValueArrays.length > 0) {
-					var getMinValue:Number = findMin(negativeValueArrays);
-					var getNumberLandMark:Number = -getMinValue/(maxValue/numberLineLandMarkDefault);
-					numberLineLandMarkForNegativeAxis = int(getNumberLandMark) + 2;
-					minValue = (maxValue/numberLineLandMarkDefault) * numberLineLandMarkForNegativeAxis;
+				redrawSkin = false;
+				if(config.length == 1) {
+					typeOfBar = String(config[0][typeField]);
+					if(typeOfBar == null || (typeOfBar != CLUSTERED && typeOfBar != STACKED))
+						typeOfBar = CLUSTERED;
+					
+					trace('typebar', typeOfBar);
 				}
 				
-				//trace(ArrayUtilities.groupValue(titleOfStackedBar));
-				//draw axis 
-				if (i == 0)
-				{
-					if (chartFirstType == HORIZONTAL_BAR || chartFirstType == VERTICAL_BAR || chartFirstType == LINE)
-					{
-						//draw axis ?
-						showCoordinate = true;
-						if (showCoordinate)
-						{
-							var orientation:String = "horizontal";
-							if (chartFirstType == HORIZONTAL_BAR)
-							{
-								//draw hor axis
-								orientation = "horizontal";
-							}
-							else if (chartFirstType == VERTICAL_BAR)
-							{
-								//draw ver axis
-								orientation = "vertical";
-							}
-							else if (chartFirstType == LINE)
-							{
-								//check for next chart type
-								if (chartType == HORIZONTAL_BAR)
-								{
-									orientation == "horizontal";
-								}
-								else if (chartType == VERTICAL_BAR)
-								{
-									orientation == "vertical";
-								}
-							}
-							
-							if (!coordinateAxis)
-							{
-								var clazz:Class = getStyle('coordinateClass') as Class;
-								coordinateAxis = new clazz() as DisplayObject;
-								if (dataProvider)
-								{
-									coordinateAxis["dataProvider"] = dataItems;
-								}
-								
-								coordinateAxis['numberLineLandMarkDefault'] = numberLineLandMarkDefault;
-								if (positiveValueArrays && positiveValueArrays.length > 0){
-									coordinateAxis["maxValue"] = maxValue;
-								}
-								if (negativeValueArrays && negativeValueArrays.length > 0){
-									coordinateAxis["minValue"] = minValue;
-									coordinateAxis['numberLineLandMarkForNegativeAxis'] = numberLineLandMarkForNegativeAxis;
-								}
-								
-								if(config.length == 1){
-									var title:String = config[0][titleField];
-									var titleDefault:String = 'Please add title to config of chart';
-									coordinateAxis["title"] = (title || title !='') ? title : titleDefault;
-								}								
-								coordinateAxis['marginTop'] = marginTop;
-								coordinateAxis['marginRight'] = marginRight;
-								coordinateAxis['marginBottom'] = marginBottom;
-								coordinateAxis['marginLeft'] = marginLeft;
-								
-								addChild(coordinateAxis);
-								coordinateAxis['orientation'] = orientation;
-							}
-							
+				if (typeOfBar == STACKED) {
+					var numberSeries:Number = seriesChartNumber.length;
+					var keyArrays:Array = ArrayUtilities.checkLabelOfSeries(labelOfSeriesBar, numberSeries, listLengthOfLine[0]);
+					ArrayUtilities.groupValue(keyArrays.sort(Array.NUMERIC));
+					ArrayUtilities.findDifficultValue(labelOfSeriesBar, keyArrays);
+					ArrayUtilities.findDifficultValue(valueOfSeriesBar, keyArrays);
+					ArrayUtilities.findDifficultValue(fillOfStackedBar, keyArrays);
+					ArrayUtilities.findDifficultValue(titleOfStackedBar, keyArrays);
+					
+					sumValueStackedBar = ArrayUtilities.sumSameKeyArray(valueOfSeriesBar, valueOfSeriesBar.length/listLengthOfLine[0]);
+					
+					var dataSeriesOfStackedBar:Array;
+					var obj:Object;
+					for (i = 0; i < labelOfSeriesBar.length; i++) {
+						if (i % listLengthOfLine[0] == 0){
+							dataSeriesOfStackedBar = new Array();
+							dataProviderOfStackedBar.addItem(dataSeriesOfStackedBar);
 						}
-					}
-				}
-				
-				//trace(width);
-				barWidth = ((width - (marginRight + marginLeft)) - (offSet *2 + gap * (lineChartDefault - 1)))/(lineChartDefault);
-				barHeight = ((height - (marginBottom + marginTop)) - (offSet * 2 + gap * (lineChartDefault - 1))) / lineChartDefault;
-				//trace('barWidth1',barWidth);
-				//draw charts
-				var chart:DisplayObject = generateChart(chartDataItem);
-				//var barshift:Number = 0;
-				if (chart is LineChart)
-				{
-					(chart as LineChart).direction = orientation;
-				}
-				if (i == 0)
-					addChild(chart);
-				else
-				{
-					if (chartFirstType == HORIZONTAL_BAR || chartFirstType == LINE)
-					{
-						if (chartType == HORIZONTAL_BAR || chartType == LINE)
-						{
-							if(chartType == LINE){
-								if(dataItems.length == lineChartDefault){
-									addChild(chart);
-								}
-							}else if(chartType == HORIZONTAL_BAR){
-								if(dataItems.length == lineChartDefault) {
-									
-									if(typeOfBar && typeOfBar == CLUSTERED){
-										barShift += barWidth/seriesChartNumber.length;
-										chart.x = barShift;	
-									}
-									addChild(chart);
-								}		
-							}
-						}
-					}
-					else if (chartFirstType == VERTICAL_BAR || chartFirstType == LINE)
-					{
-						if (chartType == VERTICAL_BAR || chartType == LINE)
-						{
-							if(chartType == LINE){
-								if(dataItems.length == lineChartDefault){
-									addChild(chart);
-								}
-							}else if(chartType == VERTICAL_BAR){
-								if(dataItems.length == lineChartDefault) {
-									if (typeOfBar && typeOfBar == CLUSTERED) {
-										barShift += barHeight/seriesChartNumber.length;
-										chart.y = -barShift;
-									}
-									trace('chart.y', chart.y);
-									addChild(chart);
-								}
-							}
-						}
+						obj = new Object;
+						obj['label'] = labelOfSeriesBar[i];
+						obj['value'] = valueOfSeriesBar[i];
+						obj['fill'] = fillOfStackedBar[i];
+						obj['sum'] = sumValueStackedBar[i];
 						
-					}
-					else if (chartFirstType == PIE && chartType == PIE)
-					{
-						addChild(chart);
+						dataSeriesOfStackedBar.push(obj);
 					}
 				}
-	
+				
+				for (var i:int = 0; i < charts.length; i++)
+				{
+					var chartDataItem:Object = charts.getItemAt(i);
+					var chartType:String = String(chartDataItem[typeField]);
+					var dataItems:IList = new ArrayList(chartDataItem[_dataSeriesField] as Array);
+					//trace(dataItems);
+					var chartFirstDataItem:Object = charts.getItemAt(0);
+					var chartFirstType:String = String(chartFirstDataItem[typeField]);
+					var firstDataItems:IList = new ArrayList(chartFirstDataItem[_dataSeriesField] as Array);
+					//trace('num chart', chartType.length);
+					//set number point for line
+					var lineChartDefault:Number = listLengthOfLine[0];
+					//get min vs max value
+					if (positiveValueArrays && positiveValueArrays.length > 0) {
+						var getMaxValue:Number = (typeOfBar == STACKED) ? findMax(sumValueStackedBar) : findMax(positiveValueArrays);
+						maxValue = getMaxValue + 30;
+					}
+					if (negativeValueArrays && negativeValueArrays.length > 0) {
+						var getMinValue:Number = findMin(negativeValueArrays);
+						var getNumberLandMark:Number = -getMinValue/(maxValue/numberLineLandMarkDefault);
+						numberLineLandMarkForNegativeAxis = int(getNumberLandMark) + 2;
+						minValue = (maxValue/numberLineLandMarkDefault) * numberLineLandMarkForNegativeAxis;
+					}
+					
+					//trace(ArrayUtilities.groupValue(titleOfStackedBar));
+					//draw axis 
+					if (i == 0)
+					{
+						if (chartFirstType == HORIZONTAL_BAR || chartFirstType == VERTICAL_BAR || chartFirstType == LINE)
+						{
+							//draw axis ?
+							showCoordinate = true;
+							if (showCoordinate)
+							{
+								var orientation:String = "horizontal";
+								if (chartFirstType == HORIZONTAL_BAR)
+								{
+									//draw hor axis
+									orientation = "horizontal";
+								}
+								else if (chartFirstType == VERTICAL_BAR)
+								{
+									//draw ver axis
+									orientation = "vertical";
+								}
+								else if (chartFirstType == LINE)
+								{
+									//check for next chart type
+									if (chartType == HORIZONTAL_BAR)
+									{
+										orientation == "horizontal";
+									}
+									else if (chartType == VERTICAL_BAR)
+									{
+										orientation == "vertical";
+									}
+								}
+								
+								if (!coordinateAxis)
+								{
+									var clazz:Class = getStyle('coordinateClass') as Class;
+									coordinateAxis = new clazz() as DisplayObject;
+									if (dataProvider)
+									{
+										coordinateAxis["dataProvider"] = dataItems;
+									}
+									
+									coordinateAxis['numberLineLandMarkDefault'] = numberLineLandMarkDefault;
+									if (positiveValueArrays && positiveValueArrays.length > 0){
+										coordinateAxis["maxValue"] = maxValue;
+									}
+									if (negativeValueArrays && negativeValueArrays.length > 0){
+										coordinateAxis["minValue"] = minValue;
+										coordinateAxis['numberLineLandMarkForNegativeAxis'] = numberLineLandMarkForNegativeAxis;
+									}
+									
+									if(config.length == 1){
+										var title:String = config[0][titleField];
+										var titleDefault:String = 'Please add title to config of chart';
+										coordinateAxis["title"] = (title || title !='') ? title : titleDefault;
+									}								
+									coordinateAxis['marginTop'] = marginTop;
+									coordinateAxis['marginRight'] = marginRight;
+									coordinateAxis['marginBottom'] = marginBottom;
+									coordinateAxis['marginLeft'] = marginLeft;
+									
+									addChild(coordinateAxis);
+									coordinateAxis['orientation'] = orientation;
+								}
+								
+							}
+						}
+					}
+					
+					//trace(width);
+					barWidth = ((width - (marginRight + marginLeft)) - (offSet *2 + gap * (lineChartDefault - 1)))/(lineChartDefault);
+					barHeight = ((height - (marginBottom + marginTop)) - (offSet * 2 + gap * (lineChartDefault - 1))) / lineChartDefault;
+					//trace('barWidth1',barWidth);
+					//draw charts
+					var chart:DisplayObject = generateChart(chartDataItem);
+					//var barshift:Number = 0;
+					if (chart is LineChart)
+					{
+						(chart as LineChart).direction = orientation;
+					}
+					if (i == 0)
+						addChild(chart);
+					else
+					{
+						if (chartFirstType == HORIZONTAL_BAR || chartFirstType == LINE)
+						{
+							if (chartType == HORIZONTAL_BAR || chartType == LINE)
+							{
+								if(chartType == LINE){
+									if(dataItems.length == lineChartDefault){
+										addChild(chart);
+									}
+								}else if(chartType == HORIZONTAL_BAR){
+									if(dataItems.length == lineChartDefault) {
+										
+										if(typeOfBar && typeOfBar == CLUSTERED){
+											barShift += barWidth/seriesChartNumber.length;
+											chart.x = barShift;	
+										}
+										addChild(chart);
+									}		
+								}
+							}
+						}
+						else if (chartFirstType == VERTICAL_BAR || chartFirstType == LINE)
+						{
+							if (chartType == VERTICAL_BAR || chartType == LINE)
+							{
+								if(chartType == LINE){
+									if(dataItems.length == lineChartDefault){
+										addChild(chart);
+									}
+								}else if(chartType == VERTICAL_BAR){
+									if(dataItems.length == lineChartDefault) {
+										if (typeOfBar && typeOfBar == CLUSTERED) {
+											barShift += barHeight/seriesChartNumber.length;
+											chart.y = -barShift;
+										}
+										trace('chart.y', chart.y);
+										addChild(chart);
+									}
+								}
+							}
+							
+						}
+						else if (chartFirstType == PIE && chartType == PIE)
+						{
+							addChild(chart);
+						}
+					}
+					
+				}
 			}
 		
 		}
@@ -688,7 +693,7 @@ package fxrialab.controls.charts
 			_config = value;
 			redrawSkin = true;
 			invalidateProperties();
-			trace('config.length', config.length);
+			//trace('config.length', config.length);
 		}
 	}
 }

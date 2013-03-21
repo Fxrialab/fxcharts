@@ -75,7 +75,7 @@ package fxrialab.controls.charts
 			txtFormatTooltip.leftMargin = txtFormatTooltip.rightMargin = 2;
 			
 			txtFieldTooltip.selectable = false;
-			txtFieldTooltip.height = 15;
+			txtFieldTooltip.height = 20;
 			txtFieldTooltip.wordWrap = true;
 			txtFieldTooltip.multiline = true;
 			txtFieldTooltip.text = data.label +":"+ data.value;
