@@ -33,7 +33,7 @@ package fxrialab.controls.charts
 		
 		private var _showCoordinate:Boolean = false;
 		private var _dataProvider:IList;
-		public var redrawSkin:Boolean = false;
+		private var redrawSkin:Boolean = false;
 		private var coordinateAxis:DisplayObject;
 		private var charts:IList = new ArrayList();
 		private var _typeField:String = "type";
