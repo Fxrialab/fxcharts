@@ -35,6 +35,7 @@ package fxrialab.controls.charts.legend
 		private var _titleField:String = "title";
 		private var _gap:Number = 5;
 		private var _checkFill:Boolean;
+		private var redrawSkin:Boolean = false;
 		
 		public function FxLegend()
 		{
@@ -93,7 +94,9 @@ package fxrialab.controls.charts.legend
 		
 		public function set dataProvider(value:IList):void
 		{
+			if (value == _dataProvider) return;
 			_dataProvider = value;
+			redrawSkin = true;
 			invalidateProperties();
 			
 			for(var j:int=0; j < dataProvider.length; j++){
@@ -111,6 +114,11 @@ package fxrialab.controls.charts.legend
 						if(chartTypes == HORIZONTAL_BAR || chartTypes == LINE) {
 							if(firstDataItems.length == dataItem.length) {
 								itemUI = itemRenderer.newInstance() as Sprite;
+								if (redrawSkin)
+								{
+									redrawSkin = false;
+									itemUI.removeChildren();
+								}
 								if(itemUI){
 									if(itemUI.hasOwnProperty('data')){
 										itemUI['data'] = dataSeries;
@@ -186,6 +194,8 @@ package fxrialab.controls.charts.legend
 		override protected function commitProperties():void 
 		{
 			super.commitProperties();
+			
+			//this.removeChildren();
 			
 			for (var i:int=0; i < numChildren; i++) {
 				var legend:Sprite = getChildAt(i) as Sprite;

@@ -44,14 +44,14 @@ package fxrialab.controls.charts
 			_dataProvider = value;
 			redrawSkin = true;
 			invalidateProperties();
-
+			//invalidateDisplayList();
 		}
 		
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
-			
-			if(redrawSkin) {
+			trace('redrawSkin', redrawSkin);
+			if(redrawSkin && skin) {
 				redrawSkin = false;
 				
 				if(skin){

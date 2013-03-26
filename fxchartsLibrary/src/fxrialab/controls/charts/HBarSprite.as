@@ -2,6 +2,7 @@ package fxrialab.controls.charts
 {
 	import flash.display.GradientType;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -31,6 +32,9 @@ package fxrialab.controls.charts
 			_data = value;
 		}
 		
+		private var bar:Sprite = new Sprite();
+		private var border:Sprite = new Sprite();
+		
 		public function draw():void {
 			//trace('value: ',data.value);
 			var gradType:String = GradientType.LINEAR;
@@ -44,8 +48,8 @@ package fxrialab.controls.charts
 				matrix.createGradientBox(data.barWidth, data.value, 90*(Math.PI/180), data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom);
 			}
 			
-			var bar:Sprite = new Sprite();
-			
+			//bar = new Sprite();
+			bar.graphics.clear();
 			bar.graphics.beginGradientFill(gradType, colors, alphas, ratios, matrix);
 			if(data.minValue){
 				bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom - data.minValue, data.barWidth, data.value);
@@ -55,9 +59,12 @@ package fxrialab.controls.charts
 			bar.graphics.endFill();
 			
 			addChild(bar);
+			
+			if (data.redraw)
+				removeChild(bar);
 			//draw border
-			var border:Sprite = new Sprite();
-
+			//border = new Sprite();
+			//border.graphics.clear();
 			border.graphics.lineStyle(2, 0xFFFFFF);
 			if(data.minValue) {
 				border.graphics.moveTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.marginBottom - data.minValue);
@@ -119,7 +126,18 @@ package fxrialab.controls.charts
 			valueField.width = data.barWidth;
 			valueField.setTextFormat(valueFieldFormat);
 			//addChild(valueField);
-
+			//this.addEventListener(Event.RESIZE, resizeHandler, false, 0, true);
+			//this.addEventListener(Event.ENTER_FRAME, completeHandler, false, 0, true);
+		}
+		
+		private function completeHandler(evt:Event):void 
+		{
+			this.addChild(bar);
+		}
+		
+		private function resizeHandler(evt:Event):void
+		{
+			this.removeChild(bar);
 		}
 		
 		private var tooltip:Sprite;

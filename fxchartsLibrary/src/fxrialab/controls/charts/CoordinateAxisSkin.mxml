@@ -59,6 +59,7 @@
 						//============================================
 						//draw positive section	
 						//draw up horizontal axis
+						graphics.clear();
 						graphics.lineStyle(2, 0xDADADA);
 						graphics.moveTo(hostComponent.marginLeft, h - hostComponent.marginBottom - minValue);
 						graphics.lineTo(hostComponent.marginLeft, h - hostComponent.marginBottom - minValue - maxValue);

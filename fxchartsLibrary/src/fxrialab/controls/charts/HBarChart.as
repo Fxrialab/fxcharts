@@ -7,6 +7,7 @@ package fxrialab.controls.charts
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.core.UIComponent;
+	import mx.events.FlexEvent;
 	
 	import spark.components.supportClasses.SkinnableComponent;
 	
@@ -34,12 +35,6 @@ package fxrialab.controls.charts
 		private var _barWidth:Number;
 		private var _seriesChartNumber:Number;
 		
-		private var _valueForStackedBar:Array = [];
-		private var _labelForStackedBar:Array = [];
-		private var _sumValueForStackedBar:Array = [];
-		private var _fillForStackedBar:Array = [];
-		private var _titleForStackedBar:Array = [];
-		
 		public var hBars:Array = [];
 		
 		[SkinPart]
@@ -65,41 +60,48 @@ package fxrialab.controls.charts
 			_dataProvider = value;
 			redrawSkin = true;
 			invalidateProperties();
-			
-			for(var j:int=0; j < dataProvider.length; j++){
-				data = dataProvider.getItemAt(j);
-
-				sumValue += data[valueField];
-				//trace('sum', data[valueField] );
-			}
+			//invalidateDisplayList();
 			
 		}
+		
+		private var redrawSprite:Boolean = false;
 		
 		override protected function commitProperties():void
 		{
 			super.commitProperties();
 			
+			/*if (hBarHolder.numChildren > 0)
+				hBarHolder.removeChildren();*/
+			
 			if(redrawSkin && skin && hBarHolder) {
 				redrawSkin = false;
-				if(hBars.length > 0){
-					for(var i:int=0; i < hBars.length; i++){
+				if (hBarHolder.numChildren > 0)
+					hBarHolder.removeChildren();
+				
+				if(hBars.length > 0)
+				{
+					
+					for(var i:int=0; i < hBars.length; i++)
+					{
 						var hBar:Sprite = hBars[i] as Sprite;
-						
+						//hBar.graphics.clear();
 						hBar.removeEventListener(MouseEvent.MOUSE_DOWN, handlerHBarMouseEvents);
 						hBar.removeEventListener(MouseEvent.ROLL_OVER, handlerHBarMouseEvents);
+						//hBarHolder.removeChild(hBar);
 					}
-					hBarHolder.removeChild(hBar);
+					
 				}
 				hBars = [];
-				if (type == FxChart.STACKED) {
-					for(i=0; i < dataProvider.length; i++) {
+				if (type == FxChart.STACKED) 
+				{
+					for(var i:int=0; i < dataProvider.length; i++) {
 						var arr:IList = new ArrayList(dataProvider.getItemAt(i) as Array);
 						for (var j:int=0; j < arr.length; j++) {
 							var sbsp:HBarStackedSprite = new HBarStackedSprite();
 							sbsp.data = arr.getItemAt(j);
 							
-							sbsp.addEventListener(MouseEvent.MOUSE_DOWN, handlerHBarMouseEvents, false, 0, true);
-							sbsp.addEventListener(MouseEvent.ROLL_OVER, handlerHBarMouseEvents, false, 0, true);
+							//sbsp.addEventListener(MouseEvent.MOUSE_DOWN, handlerHBarMouseEvents, false, 0, true);
+							//sbsp.addEventListener(MouseEvent.ROLL_OVER, handlerHBarMouseEvents, false, 0, true);
 							
 							hBarHolder.addChild(sbsp);
 							hBars.push(sbsp);
@@ -108,10 +110,12 @@ package fxrialab.controls.charts
 				}else {
 					for(i=0; i < dataProvider.length; i++){
 						var hbsp:HBarSprite = new HBarSprite();
+
 						hbsp.data = dataProvider.getItemAt(i);
 						
-						hbsp.addEventListener(MouseEvent.MOUSE_DOWN, handlerHBarMouseEvents, false, 0, true);
-						hbsp.addEventListener(MouseEvent.ROLL_OVER, handlerHBarMouseEvents, false, 0, true);
+						//hbsp.addEventListener(MouseEvent.MOUSE_DOWN, handlerHBarMouseEvents, false, 0, true);
+						//hbsp.addEventListener(MouseEvent.ROLL_OVER, handlerHBarMouseEvents, false, 0, true);
+						//hbsp.addEventListener(FlexEvent.CREATION_COMPLETE, onCreateCompleteEvent, false, 0, true);
 						
 						hBarHolder.addChild(hbsp);
 						hBars.push(hbsp);
@@ -124,14 +128,19 @@ package fxrialab.controls.charts
 					
 				}
 			}
+			/*if (redrawSkin == false)
+				redrawSprite = true;*/
 		}
 			
 		override protected function updateDisplayList(w:Number, h:Number):void
 		{
 			super.updateDisplayList(w, h);
 			//trace(dataProvider.length);
-			if (type == FxChart.STACKED) {
-				for (var i:int = 0; i < dataProvider.length; i++) {
+			//redrawSprite = true;
+			if (type == FxChart.STACKED) 
+			{
+				for (var i:int = 0; i < dataProvider.length; i++) 
+				{
 					var arrList:IList = new ArrayList(dataProvider.getItemAt(i) as Array);
 
 					for (var j:int=0; j < arrList.length; j++) {
@@ -157,12 +166,14 @@ package fxrialab.controls.charts
 					}
 				}
 			}else {
-				for (i = 0; i < dataProvider.length; i++){
+				for (i = 0; i < dataProvider.length; i++)
+				{
 					//update data
 					var bar:HBarSprite = hBars[i] as HBarSprite;
+
 					bar.data = dataProvider.getItemAt(i);
 					bar.data.sumValue = sumValue;
-					
+					bar.data.redraw = redrawSprite;
 					bar.data.font = getStyle('fontDefault');
 					bar.data.size = getStyle('sizeDefault');
 					bar.data.align = getStyle('alignDefault');
@@ -190,11 +201,18 @@ package fxrialab.controls.charts
 				}
 			}
 		}
+		
+		private function onCreateCompleteEvent(evt:FlexEvent):void
+		{
+			redrawSprite = true;
+		}
 				
-		private function handlerHBarMouseEvents(evt:MouseEvent):void{
+		private function handlerHBarMouseEvents(evt:MouseEvent):void
+		{
 			var hBar:HBarSprite = evt.target as HBarSprite;
 			
-			switch(evt.type){
+			switch(evt.type)
+			{
 				case MouseEvent.MOUSE_DOWN:
 						
 					break;
@@ -389,66 +407,6 @@ package fxrialab.controls.charts
 		public function set seriesChartNumber(value:Number):void
 		{
 			_seriesChartNumber = value;
-			redrawSkin = true;
-			invalidateProperties();
-		}
-
-		public function get valueForStackedBar():Array
-		{
-			return _valueForStackedBar;
-		}
-
-		public function set valueForStackedBar(value:Array):void
-		{
-			_valueForStackedBar = value;
-			redrawSkin = true;
-			invalidateProperties();
-		}
-
-		public function get labelForStackedBar():Array
-		{
-			return _labelForStackedBar;
-		}
-
-		public function set labelForStackedBar(value:Array):void
-		{
-			_labelForStackedBar = value;
-			redrawSkin = true;
-			invalidateProperties();
-		}
-
-		public function get sumValueForStackedBar():Array
-		{
-			return _sumValueForStackedBar;
-		}
-
-		public function set sumValueForStackedBar(value:Array):void
-		{
-			_sumValueForStackedBar = value;
-			redrawSkin = true;
-			invalidateProperties();
-		}
-
-		public function get fillForStackedBar():Array
-		{
-			return _fillForStackedBar;
-		}
-
-		public function set fillForStackedBar(value:Array):void
-		{
-			_fillForStackedBar = value;
-			redrawSkin = true;
-			invalidateProperties();
-		}
-
-		public function get titleForStackedBar():Array
-		{
-			return _titleForStackedBar;
-		}
-
-		public function set titleForStackedBar(value:Array):void
-		{
-			_titleForStackedBar = value;
 			redrawSkin = true;
 			invalidateProperties();
 		}

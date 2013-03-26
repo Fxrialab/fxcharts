@@ -50,7 +50,8 @@ package fxrialab.controls.charts
 			
 			this._dataProvider = value;
 			redrawSkin = true;
-			invalidateProperties();			
+			invalidateProperties();
+			invalidateDisplayList();
 
 			for(var j:int=0; j <dataProvider.length; j++){
 				data = dataProvider.getItemAt(j);

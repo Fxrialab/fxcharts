@@ -32,7 +32,7 @@ package fxrialab.controls.charts
 		public function draw():void {
 			if(data.direction == "horizontal"){
 				var pointHorizontal:Sprite = new Sprite();
-				
+				pointHorizontal.graphics.clear();
 				pointHorizontal.graphics.beginFill(data.stroke, 1);
 				pointHorizontal.graphics.drawCircle(0, 0, 3);
 				pointHorizontal.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth/2;
