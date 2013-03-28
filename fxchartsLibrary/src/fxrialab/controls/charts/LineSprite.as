@@ -45,7 +45,7 @@ package fxrialab.controls.charts
 				addChild(pointHorizontal);
 			}else {
 				var pointVertical:Sprite = new Sprite();
-				
+				pointVertical.graphics.clear();
 				pointVertical.graphics.beginFill(data.stroke, 1);
 				pointVertical.graphics.drawCircle(0, 0, 3);
 				if(data.minValue) {

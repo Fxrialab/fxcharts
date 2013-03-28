@@ -94,7 +94,7 @@ package fxrialab.controls.charts
 				hBars = [];
 				if (type == FxChart.STACKED) 
 				{
-					for(var i:int=0; i < dataProvider.length; i++) {
+					for(i=0; i < dataProvider.length; i++) {
 						var arr:IList = new ArrayList(dataProvider.getItemAt(i) as Array);
 						for (var j:int=0; j < arr.length; j++) {
 							var sbsp:HBarStackedSprite = new HBarStackedSprite();
@@ -184,7 +184,6 @@ package fxrialab.controls.charts
 					bar.data.gapSum = _gap * i;
 					bar.data.width = w;
 					bar.data.height = h;
-					bar.data.seriesChartNumber = seriesChartNumber;
 					//trace('type of bar', seriesChartNumber);
 					bar.data.barWidth = (type == FxChart.CLUSTERED) ? barWidth/seriesChartNumber : barWidth;
 					bar.data.barWidthSum  = barWidth * i;

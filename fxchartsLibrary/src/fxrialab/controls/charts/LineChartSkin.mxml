@@ -21,47 +21,47 @@
 				if (hostComponent.direction == "horizontal") {
 					var xMoveHorizontal:Number;
 					if(hostComponent.minValue) {
-						graphics.moveTo(hostComponent.marginLeft + hostComponent.data.offSet + hostComponent.data.barWidth - hostComponent.data.barWidth / 2, hostComponent.data.height - hostComponent.marginBottom - getFirstValue - hostComponent.minValue);
+						graphics.moveTo(hostComponent.marginLeft + hostComponent.data.offSet + hostComponent.barWidth - hostComponent.barWidth / 2, hostComponent.data.height - hostComponent.marginBottom - getFirstValue - hostComponent.minValue);
 						
 						for (var k:int = 0; k < hostComponent.dataProvider.length - 1; k++) {
 							getValueForLineTo= hostComponent.dataProvider.getItemAt(k+1);
 							yLineTo = getValueForLineTo[hostComponent.data.valueField];
-							xMoveHorizontal = hostComponent.marginLeft + hostComponent.data.offSet + hostComponent.data.gap * k + hostComponent.data.barWidth * k + hostComponent.data.barWidth / 2;
+							xMoveHorizontal = hostComponent.marginLeft + hostComponent.data.offSet + hostComponent.data.gap * k + hostComponent.barWidth * k + hostComponent.barWidth / 2;
 							
-							graphics.lineTo(xMoveHorizontal + hostComponent.data.barWidth + hostComponent.data.gap, hostComponent.data.height - hostComponent.data.marginBottom - yLineTo -hostComponent.minValue);
+							graphics.lineTo(xMoveHorizontal + hostComponent.barWidth + hostComponent.data.gap, hostComponent.data.height - hostComponent.data.marginBottom - yLineTo -hostComponent.minValue);
 						}
 					}else {
-						graphics.moveTo(hostComponent.marginLeft + hostComponent.data.offSet + hostComponent.data.barWidth - hostComponent.data.barWidth / 2, hostComponent.data.height - hostComponent.marginBottom - getFirstValue);
+						graphics.moveTo(hostComponent.marginLeft + hostComponent.data.offSet + hostComponent.barWidth - hostComponent.barWidth / 2, hostComponent.data.height - hostComponent.marginBottom - getFirstValue);
 						
 						for (k = 0; k < hostComponent.dataProvider.length - 1; k++) {
 							getValueForLineTo= hostComponent.dataProvider.getItemAt(k+1);
 							yLineTo = getValueForLineTo[hostComponent.data.valueField];
-							xMoveHorizontal = hostComponent.marginLeft + hostComponent.data.offSet + hostComponent.data.gap * k + hostComponent.data.barWidth * k + hostComponent.data.barWidth / 2;
+							xMoveHorizontal = hostComponent.marginLeft + hostComponent.data.offSet + hostComponent.data.gap * k + hostComponent.barWidth * k + hostComponent.barWidth / 2;
 							
-							graphics.lineTo(xMoveHorizontal + hostComponent.data.barWidth + hostComponent.data.gap, hostComponent.data.height - hostComponent.data.marginBottom - yLineTo);
+							graphics.lineTo(xMoveHorizontal + hostComponent.barWidth + hostComponent.data.gap, hostComponent.data.height - hostComponent.data.marginBottom - yLineTo);
 						}
 					}
 				}else {
 					var yyMove:Number;
 					if(hostComponent.minValue) {
-						graphics.moveTo(hostComponent.marginLeft + getFirstValue + hostComponent.minValue, hostComponent.data.height - (hostComponent.marginBottom + hostComponent.data.offSet + hostComponent.data.barHeight/2));
+						graphics.moveTo(hostComponent.marginLeft + getFirstValue + hostComponent.minValue, hostComponent.data.height - (hostComponent.marginBottom + hostComponent.data.offSet + hostComponent.barHeight/2));
 						
 						for (k= 0; k < hostComponent.dataProvider.length - 1; k++) {
 							getValueForLineTo= hostComponent.dataProvider.getItemAt(k+1);
 							yLineTo = getValueForLineTo[hostComponent.data.valueField];
-							yyMove = hostComponent.data.height - (hostComponent.data.gap*k + hostComponent.data.barHeight*k + hostComponent.marginBottom + hostComponent.data.offSet + hostComponent.data.barHeight/2);
+							yyMove = hostComponent.data.height - (hostComponent.data.gap*k + hostComponent.barHeight*k + hostComponent.marginBottom + hostComponent.data.offSet + hostComponent.barHeight/2);
 							
-							graphics.lineTo(hostComponent.marginLeft + yLineTo + hostComponent.minValue, yyMove - hostComponent.data.barHeight - hostComponent.data.gap);
+							graphics.lineTo(hostComponent.marginLeft + yLineTo + hostComponent.minValue, yyMove - hostComponent.barHeight - hostComponent.data.gap);
 						}
 					}else {
-						graphics.moveTo(hostComponent.marginLeft + getFirstValue, hostComponent.data.height - (hostComponent.marginBottom + hostComponent.data.offSet + hostComponent.data.barHeight/2));
+						graphics.moveTo(hostComponent.marginLeft + getFirstValue, hostComponent.data.height - (hostComponent.marginBottom + hostComponent.data.offSet + hostComponent.barHeight/2));
 						
 						for (k= 0; k < hostComponent.dataProvider.length - 1; k++) {
 							getValueForLineTo= hostComponent.dataProvider.getItemAt(k+1);
 							yLineTo = getValueForLineTo[hostComponent.data.valueField];
-							yyMove = hostComponent.data.height - (hostComponent.data.gap*k + hostComponent.data.barHeight*k + hostComponent.marginBottom + hostComponent.data.offSet + hostComponent.data.barHeight/2);
+							yyMove = hostComponent.data.height - (hostComponent.data.gap*k + hostComponent.barHeight*k + hostComponent.marginBottom + hostComponent.data.offSet + hostComponent.barHeight/2);
 							
-							graphics.lineTo(hostComponent.marginLeft + yLineTo, yyMove - hostComponent.data.barHeight - hostComponent.data.gap);
+							graphics.lineTo(hostComponent.marginLeft + yLineTo, yyMove - hostComponent.barHeight - hostComponent.data.gap);
 						}
 					}
 				}

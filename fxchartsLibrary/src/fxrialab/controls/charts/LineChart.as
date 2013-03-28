@@ -27,6 +27,8 @@ package fxrialab.controls.charts
 		
 		private var _maxValue:Number;
 		private var _minValue:Number;
+		private var _barWidth:Number;
+		private var _barHeight:Number;
 		
 		public var lines:Array = [];
 		
@@ -72,7 +74,7 @@ package fxrialab.controls.charts
 						line.removeEventListener(MouseEvent.MOUSE_DOWN, handlerLineMouseEvents);
 						line.removeEventListener(MouseEvent.ROLL_OVER, handlerLineMouseEvents);
 					}
-					lineHolder.removeChild(line);
+					lineHolder.removeChildren();
 				}
 				
 				lines = [];
@@ -98,8 +100,8 @@ package fxrialab.controls.charts
 		{
 			super.updateDisplayList(w, h);
 			
-			var barWidth:Number;
-			var barHeight:Number;
+			// barWidth:Number;
+			//var barHeight:Number;
 			for(var i:int=0; i < dataProvider.length; i++){	
 				//update data
 				var line:LineSprite = lines[i] as LineSprite;
@@ -116,8 +118,8 @@ package fxrialab.controls.charts
 				line.data.maxValue = maxValue;
 				line.data.minValue = minValue;
 				
-				barWidth = (w - (marginRight + marginLeft) - (_offSet *2 + _gap*(dataProvider.length - 1)))/dataProvider.length;
-				barHeight = (h - (marginBottom + marginTop) - (_offSet * 2 + _gap * (dataProvider.length - 1))) / dataProvider.length;
+				//barWidth = (w - (marginRight + marginLeft) - (_offSet *2 + _gap*(dataProvider.length - 1)))/dataProvider.length;
+				//barHeight = (h - (marginBottom + marginTop) - (_offSet * 2 + _gap * (dataProvider.length - 1))) / dataProvider.length;
 
 				line.data.barWidth = barWidth;
 				line.data.barWidthSum = barWidth * i;
@@ -298,6 +300,30 @@ package fxrialab.controls.charts
 		public function set minValue(value:Number):void
 		{
 			_minValue = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+
+		public function get barWidth():Number
+		{
+			return _barWidth;
+		}
+
+		public function set barWidth(value:Number):void
+		{
+			_barWidth = value;
+			redrawSkin = true;
+			invalidateProperties();
+		}
+
+		public function get barHeight():Number
+		{
+			return _barHeight;
+		}
+
+		public function set barHeight(value:Number):void
+		{
+			_barHeight = value;
 			redrawSkin = true;
 			invalidateProperties();
 		}

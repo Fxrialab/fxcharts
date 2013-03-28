@@ -168,7 +168,8 @@ package fxrialab.controls.charts
 			
 			if(config.length == 1) {
 				typeOfBar = String(config[0][typeField]);
-				if(typeOfBar == null || (typeOfBar != CLUSTERED && typeOfBar != STACKED))
+				trace('typebar1', typeOfBar);
+				if(typeOfBar != 'undefined' && typeOfBar != CLUSTERED && typeOfBar != STACKED)
 					typeOfBar = CLUSTERED;
 				
 				trace('typebar', typeOfBar);
@@ -261,7 +262,7 @@ package fxrialab.controls.charts
 							
 							if (redrawSkin || coordinateAxis)
 							{
-								trace('rrrredraw:', redrawSkin);
+								//trace('rrrredraw:', redrawSkin);
 								var clazz:Class = getStyle('coordinateClass') as Class;
 								coordinateAxis = new clazz() as DisplayObject;
 								if (dataProvider)
@@ -290,20 +291,13 @@ package fxrialab.controls.charts
 								
 								addChild(coordinateAxis);
 								coordinateAxis['orientation'] = orientation;
-							}else {
-								
 							}
-							/*if (redrawSkin == true && coordinateAxis) {
-								redrawSkin = false;
-								removeChild(coordinateAxis);
-							}*/
-							
 						}
 					}
 				}
 				
 				//trace(width);
-				barWidth = ((width - (marginRight + marginLeft)) - (offSet *2 + gap * (lineChartDefault - 1)))/(lineChartDefault);
+				barWidth = ((width - (marginRight + marginLeft)) - (offSet *2 + gap * (lineChartDefault - 1))) / lineChartDefault;
 				barHeight = ((height - (marginBottom + marginTop)) - (offSet * 2 + gap * (lineChartDefault - 1))) / lineChartDefault;
 				//trace('barWidth1',barWidth);
 				//draw charts
@@ -444,17 +438,7 @@ package fxrialab.controls.charts
 						(chart as HBarChart).minValue = minValue;
 					}
 					(chart as HBarChart).type = typeOfBar;
-					//set type for bar
-					
-					
-					/*for(var a:int=0;a<dataItems.length;a++){
-						var d:Object = dataItems.getItemAt(a);
-						for(var key:String in d){
-							if(d[key] instanceof Number)
-								trace(d[key]);
-						}
-					}*/
-					
+					//set type for bar					
 
 					break;
 				case LINE: 
@@ -470,6 +454,8 @@ package fxrialab.controls.charts
 					(chart as LineChart).marginBottom = marginBottom;
 					(chart as LineChart).marginLeft = marginLeft;
 					(chart as LineChart).stroke = (lineStroke) ? lineStroke : 0x3f9b90;
+					(chart as LineChart).barWidth = barWidth;
+					(chart as LineChart).barHeight = barHeight;
 					//call max value & min value 
 					if (positiveValueArrays && positiveValueArrays.length > 0){
 						(chart as LineChart).maxValue = maxValue;
