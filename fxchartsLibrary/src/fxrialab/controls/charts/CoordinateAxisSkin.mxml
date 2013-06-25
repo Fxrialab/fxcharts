@@ -23,6 +23,9 @@
 				maxValue = hostComponent.maxValue;
 				minValue = hostComponent.minValue;
 				numberLineLandMark = hostComponent.numberLineLandMarkDefault;
+				
+				numberLineLandMark = Math.ceil(h/40);
+				
 				numberLandMarkBelow = hostComponent.numberLineLandMarkForNegativeAxis;
 				
 				//set text format for label field
@@ -30,6 +33,8 @@
 				horizontalFormat.size = getStyle('sizeDefault');
 				horizontalFormat.font = getStyle('fontDefault');
 				horizontalFormat.align = getStyle('rightAlign');
+				horizontalFormat.color = 0xA0A0A0;
+				
 				
 				var verticalFormat:TextFormat = new TextFormat();
 				verticalFormat.size = getStyle('sizeDefault');
@@ -60,7 +65,7 @@
 						//draw positive section	
 						//draw up horizontal axis
 						graphics.clear();
-						graphics.lineStyle(1, 0xFF0000);
+						graphics.lineStyle(1, 0xDADADA);
 						graphics.moveTo(hostComponent.marginLeft, h - hostComponent.marginBottom - minValue);
 						graphics.lineTo(hostComponent.marginLeft, h - hostComponent.marginBottom - minValue - maxValue);
 						//draw vertical axis
@@ -121,14 +126,14 @@
 						//draw horizontal axis				
 						//graphics.clear();
 						graphics.lineStyle(1, 0xDADADA);
-						graphics.moveTo(hostComponent.marginLeft, h - hostComponent.marginBottom);
-						graphics.lineTo(hostComponent.marginLeft, h - (maxValue + hostComponent.marginBottom));
+					//	graphics.moveTo(hostComponent.marginLeft, h - hostComponent.marginBottom);
+					//	graphics.lineTo(hostComponent.marginLeft, h - (maxValue + hostComponent.marginBottom));
 						//draw vertical axis
 						graphics.moveTo(hostComponent.marginLeft-2, h - hostComponent.marginBottom);
 						graphics.lineTo(w - hostComponent.marginRight + 2, h - hostComponent.marginBottom);
 						//draw percent axis
-						graphics.moveTo(w - hostComponent.marginRight, h - hostComponent.marginBottom);
-						graphics.lineTo(w - hostComponent.marginRight, h - (maxValue + hostComponent.marginBottom));
+					//	graphics.moveTo(w - hostComponent.marginRight, h - hostComponent.marginBottom);
+					//	graphics.lineTo(w - hostComponent.marginRight, h - (maxValue + hostComponent.marginBottom));
 						
 						//draw landmark gap for coordinate axis
 						for (j = 1; j <= numberLineLandMark; j++) {
@@ -143,8 +148,8 @@
 							var leftValue:TextField = new TextField();
 							leftValue.text = String(Math.ceil(maxValue/numberLineLandMark * k));
 							leftValue.x = - 7;
-							leftValue.y = h - (maxValue/numberLineLandMark * k) - (hostComponent.marginBottom+5);
-							leftValue.width = 15;
+							leftValue.y = h - (maxValue/numberLineLandMark * k) - (hostComponent.marginBottom+8);
+							leftValue.width = 30;
 							leftValue.setTextFormat(horizontalFormat);
 							displayLabel.addChild(leftValue);
 

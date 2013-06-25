@@ -107,6 +107,8 @@ package fxrialab.controls.charts
 				labelField.y = data.height - data.marginBottom + 5;
 			}
 			labelField.width = data.barWidth;
+			labelField.wordWrap = true;
+			
 			labelField.setTextFormat(labelFieldFormat);
 			addChild(labelField);
 			

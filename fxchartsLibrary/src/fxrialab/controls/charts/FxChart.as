@@ -45,7 +45,7 @@ package fxrialab.controls.charts
 		private var _labelField:String = "label";
 		private var _fillField:String = "fill";
 		private var _strokeField:String = "stroke";
-		private var _gap:Number = 30;
+		private var _gap:Number = 20;
 		private var _offSet:Number = 10;
 		private var _titleField:String = "title";
 		private var _config:Array;
@@ -78,7 +78,7 @@ package fxrialab.controls.charts
 			this.setStyle('leftAlign', 'left');
 			this.setStyle('rightAlign', 'right');
 			
-			this.setStyle('titleSize',12);
+			this.setStyle('titleSize',10);
 			this.setStyle('titleFont','Verdana');
 		}
 		
