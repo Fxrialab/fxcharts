@@ -60,7 +60,7 @@
 						//draw positive section	
 						//draw up horizontal axis
 						graphics.clear();
-						graphics.lineStyle(2, 0xDADADA);
+						graphics.lineStyle(1, 0xFF0000);
 						graphics.moveTo(hostComponent.marginLeft, h - hostComponent.marginBottom - minValue);
 						graphics.lineTo(hostComponent.marginLeft, h - hostComponent.marginBottom - minValue - maxValue);
 						//draw vertical axis
@@ -120,7 +120,7 @@
 						//============================================
 						//draw horizontal axis				
 						//graphics.clear();
-						graphics.lineStyle(2, 0xDADADA);
+						graphics.lineStyle(1, 0xDADADA);
 						graphics.moveTo(hostComponent.marginLeft, h - hostComponent.marginBottom);
 						graphics.lineTo(hostComponent.marginLeft, h - (maxValue + hostComponent.marginBottom));
 						//draw vertical axis
@@ -170,7 +170,7 @@
 						//draw coordinate for chart
 						//============================================
 						graphics.clear();
-						graphics.lineStyle(2, 0xDADADA);
+						graphics.lineStyle(1, 0xDADADA);
 						//draw positive section	
 						//draw right vertical axis
 						graphics.moveTo(1 + hostComponent.marginLeft + minValue, hostComponent.marginTop);
@@ -234,7 +234,7 @@
 						titleLabel.width = hostComponent.maxValue;
 						//draw
 						graphics.clear();
-						graphics.lineStyle(2, 0xDADADA);
+						graphics.lineStyle(1, 0xDADADA);
 						//draw vertical axis
 						graphics.moveTo(1 + hostComponent.marginLeft, hostComponent.marginTop);
 						graphics.lineTo(1 + hostComponent.marginLeft + maxValue, hostComponent.marginTop);

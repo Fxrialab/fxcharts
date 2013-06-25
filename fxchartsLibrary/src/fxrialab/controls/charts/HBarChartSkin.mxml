@@ -18,9 +18,9 @@
 		]]>
 	</fx:Script>
 
-	<s:filters>
+<!--	<s:filters>
 		<s:DropShadowFilter distance="2" angle="360" color="0x000000" alpha="0.4" blurX="4" blurY="1.5" quality="5" />
-	</s:filters>
+	</s:filters>-->
 	
 	
 	<mx:UIComponent id="hBarHolder"/>

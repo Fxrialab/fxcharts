@@ -45,14 +45,14 @@ package fxrialab.controls.charts
 		private var _labelField:String = "label";
 		private var _fillField:String = "fill";
 		private var _strokeField:String = "stroke";
-		private var _gap:Number = 20;
+		private var _gap:Number = 30;
 		private var _offSet:Number = 10;
 		private var _titleField:String = "title";
 		private var _config:Array;
 		private var _marginTop:Number = 30;
 		private var _marginRight:Number = 10;
 		private var _marginBottom:Number = 10;
-		private var _marginLeft:Number = 10;
+		private var _marginLeft:Number = 30;
 
 		private var _numberLineLandMarkDefault:Number = 10;
 		private var _numberLineLandMarkForNegativeAxis:Number;
@@ -71,15 +71,15 @@ package fxrialab.controls.charts
 			super();
 			setStyle('coordinateClass', CoordinateAxis);
 			
-			this.setStyle('fontDefault','Arial');
-			this.setStyle('sizeDefault',6);
+			this.setStyle('fontDefault','Verdana');
+			this.setStyle('sizeDefault',10);
 			this.setStyle('alignDefault', 'center');
 			
 			this.setStyle('leftAlign', 'left');
 			this.setStyle('rightAlign', 'right');
 			
-			this.setStyle('titleSize',10);
-			this.setStyle('titleFont','Time New Normal');
+			this.setStyle('titleSize',12);
+			this.setStyle('titleFont','Verdana');
 		}
 		
 		public function get dataProvider():IList

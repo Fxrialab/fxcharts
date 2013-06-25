@@ -177,7 +177,8 @@ package fxrialab.controls.charts
 					bar.data.font = getStyle('fontDefault');
 					bar.data.size = getStyle('sizeDefault');
 					bar.data.align = getStyle('alignDefault');
-					bar.data.fill = fill;
+					if (!bar.data.fill)
+						bar.data.fill = fill;
 					
 					bar.data.offSet = _offSet;
 					bar.data.gap = _gap;

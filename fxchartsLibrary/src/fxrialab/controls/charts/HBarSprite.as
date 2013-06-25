@@ -38,9 +38,9 @@ package fxrialab.controls.charts
 		public function draw():void {
 			//trace('value: ',data.value);
 			var gradType:String = GradientType.LINEAR;
-			var colors:Array = [data.fill, data.fill, data.fill];
-			var alphas:Array = [1, 0.6, 0.3];
-			var ratios:Array = [0, 30, 255];
+		//	var colors:Array = [data.fill, data.fill, data.fill];
+		//	var alphas:Array = [1, 0.6, 0.3];
+		//	var ratios:Array = [0, 30, 255];
 			var matrix:Matrix = new Matrix();
 			if(data.minValue) {
 				matrix.createGradientBox(data.barWidth, data.value, 90*(Math.PI/180), data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom - data.minValue);
@@ -50,7 +50,7 @@ package fxrialab.controls.charts
 			
 			//bar = new Sprite();
 			bar.graphics.clear();
-			bar.graphics.beginGradientFill(gradType, colors, alphas, ratios, matrix);
+			bar.graphics.beginFill(data.fill); //beginGradientFill(gradType, colors, alphas, ratios, matrix);
 			if(data.minValue){
 				bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom - data.minValue, data.barWidth, data.value);
 			}else {
@@ -65,7 +65,7 @@ package fxrialab.controls.charts
 			//draw border
 			//border = new Sprite();
 			//border.graphics.clear();
-			border.graphics.lineStyle(2, 0xFFFFFF);
+			//border.graphics.lineStyle(2, 0xFFFFFF);
 			if(data.minValue) {
 				border.graphics.moveTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.marginBottom - data.minValue);
 				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom - data.minValue);
@@ -108,7 +108,7 @@ package fxrialab.controls.charts
 			}
 			labelField.width = data.barWidth;
 			labelField.setTextFormat(labelFieldFormat);
-			//addChild(labelField);
+			addChild(labelField);
 			
 			//draw value field
 			var valueField:TextField = new TextField();
