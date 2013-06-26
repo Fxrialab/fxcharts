@@ -109,13 +109,19 @@ package fxrialab.controls.charts
 					}
 				}else {
 					for(i=0; i < dataProvider.length; i++){
-						var hbsp:HBarSprite = new HBarSprite();
+						/*var hbsp:HBarSprite = new HBarSprite();
 
 						hbsp.data = dataProvider.getItemAt(i);
 						
-						//hbsp.addEventListener(MouseEvent.MOUSE_DOWN, handlerHBarMouseEvents, false, 0, true);
-						//hbsp.addEventListener(MouseEvent.ROLL_OVER, handlerHBarMouseEvents, false, 0, true);
+						hbsp.addEventListener(MouseEvent.MOUSE_DOWN, handlerHBarMouseEvents, false, 0, true);
+						hbsp.addEventListener(MouseEvent.ROLL_OVER, handlerHBarMouseEvents, false, 0, true);
 						//hbsp.addEventListener(FlexEvent.CREATION_COMPLETE, onCreateCompleteEvent, false, 0, true);
+						
+						hBarHolder.addChild(hbsp);
+						hBars.push(hbsp);*/
+						
+						var hbsp:HBarItem = new HBarItem;
+						hbsp.data = dataProvider.getItemAt(i);
 						
 						hBarHolder.addChild(hbsp);
 						hBars.push(hbsp);
@@ -169,7 +175,7 @@ package fxrialab.controls.charts
 				for (i = 0; i < dataProvider.length; i++)
 				{
 					//update data
-					var bar:HBarSprite = hBars[i] as HBarSprite;
+					/*var bar:HBarSprite = hBars[i] as HBarSprite;
 
 					bar.data = dataProvider.getItemAt(i);
 					bar.data.sumValue = sumValue;
@@ -197,7 +203,35 @@ package fxrialab.controls.charts
 					bar.data.maxValue = maxValue;
 					//draw
 					
-					bar.draw();	
+					bar.draw();	*/
+					var bar:HBarItem = hBars[i] as HBarItem;
+					
+					bar.data = dataProvider.getItemAt(i);
+					bar.data.sumValue = sumValue;
+					bar.data.redraw = redrawSprite;
+					bar.data.font = getStyle('fontDefault');
+					bar.data.size = getStyle('sizeDefault');
+					bar.data.align = getStyle('alignDefault');
+					if (!bar.data.fill)
+						bar.data.fill = fill;
+					
+					bar.data.offSet = _offSet;
+					bar.data.gap = _gap;
+					bar.data.gapSum = _gap * i;
+					bar.data.width = w;
+					bar.data.height = h;
+					//trace('type of bar', seriesChartNumber);
+					bar.data.barWidth = (type == FxChart.CLUSTERED) ? barWidth/seriesChartNumber : barWidth;
+					bar.data.barWidthSum  = barWidth * i;
+					
+					bar.data.marginLeft = marginLeft;
+					bar.data.marginRight = marginRight;
+					bar.data.marginBottom = marginBottom;
+					
+					bar.data.minValue = minValue;
+					bar.data.maxValue = maxValue;
+					
+					bar.invalidateProperties();
 				}
 			}
 		}
