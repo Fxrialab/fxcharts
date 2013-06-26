@@ -16,6 +16,8 @@
 			private var minValue:Number;
 			private var numberLandMarkBelow:Number;
 			private var numberLineLandMark:Number;
+			private var widthChart:Number;
+			private var heightChart:Number;
 
 			override protected function updateDisplayList(w:Number, h:Number):void {
 				super.updateDisplayList(w, h);
@@ -27,6 +29,8 @@
 				numberLineLandMark = Math.ceil(h/40);
 				
 				numberLandMarkBelow = hostComponent.numberLineLandMarkForNegativeAxis;
+				widthChart	= w - hostComponent.marginLeft - hostComponent.marginRight;
+				heightChart = h - hostComponent.marginTop - hostComponent.marginBottom;
 				
 				//set text format for label field
 				var horizontalFormat:TextFormat = new TextFormat();
@@ -57,41 +61,33 @@
 					if(hostComponent.minValue){
 						//position for title
 						titleLabel.x = 0;
-						titleLabel.y = h - maxValue - 40 - minValue;
+						titleLabel.y = 0;
 						titleLabel.width = w;
 						//============================================
 						//draw coordinate for chart
 						//============================================
-						//draw positive section	
-						//draw up horizontal axis
+						//draw horizontal axis
 						graphics.clear();
 						graphics.lineStyle(1, 0xDADADA);
-						graphics.moveTo(hostComponent.marginLeft, h - hostComponent.marginBottom - minValue);
-						graphics.lineTo(hostComponent.marginLeft, h - hostComponent.marginBottom - minValue - maxValue);
+					//	graphics.moveTo(hostComponent.marginLeft, h - hostComponent.marginBottom);
+					//	graphics.lineTo(hostComponent.marginLeft, hostComponent.marginTop);
 						//draw vertical axis
-						graphics.moveTo(hostComponent.marginLeft-2, h - hostComponent.marginBottom - minValue);
-						graphics.lineTo(w - hostComponent.marginRight + 2, h - hostComponent.marginBottom - minValue);
-						//draw up percent axis
-						graphics.moveTo(w - hostComponent.marginRight, h - hostComponent.marginBottom - minValue);
-						graphics.lineTo(w - hostComponent.marginRight, h - hostComponent.marginBottom - minValue - maxValue);
-						//draw regative section
-						//draw down horizontal axis
-						graphics.moveTo(hostComponent.marginLeft, h - hostComponent.marginBottom - minValue);
-						graphics.lineTo(hostComponent.marginLeft, h - hostComponent.marginBottom);
-						//draw down percent axis
-						graphics.moveTo(w - hostComponent.marginRight, h - hostComponent.marginBottom - minValue);
-						graphics.lineTo(w - hostComponent.marginRight, h - hostComponent.marginBottom);
+						graphics.moveTo(hostComponent.marginLeft-2, h - hostComponent.marginBottom - minValue*heightChart/(minValue + maxValue));
+						graphics.lineTo(w - hostComponent.marginRight + 2, h - hostComponent.marginBottom - minValue*heightChart/(minValue + maxValue));
+						//draw percent axis
+					//	graphics.moveTo(w - hostComponent.marginRight, h - hostComponent.marginBottom);
+					//	graphics.lineTo(w - hostComponent.marginRight, hostComponent.marginTop);
 						
 						//draw landmark gap for positive above section
-						for (var j:uint = 1; j <= numberLineLandMark; j++) {
-							graphics.moveTo(hostComponent.marginLeft-2, h - hostComponent.marginBottom - ((maxValue)/numberLineLandMark * j) - minValue);
-							graphics.lineTo(w - hostComponent.marginRight + 2, h - hostComponent.marginBottom - ((maxValue)/numberLineLandMark * j) - minValue);
+						 for (var j:uint = 1; j <= numberLineLandMark; j++) {
+							graphics.moveTo(hostComponent.marginLeft-2, h - hostComponent.marginBottom - ((maxValue*heightChart/(minValue + maxValue))/numberLineLandMark * j) - minValue*heightChart/(minValue + maxValue));
+							graphics.lineTo(w - hostComponent.marginRight + 2, h - hostComponent.marginBottom - ((maxValue*heightChart/(minValue + maxValue))/numberLineLandMark * j) - minValue*heightChart/(minValue + maxValue));
 						}
 						//draw landmark gap for negative below section
 						 for (j = 1; j <= numberLandMarkBelow; j++) {
-							graphics.moveTo(hostComponent.marginLeft-2, h - hostComponent.marginBottom + (minValue/numberLandMarkBelow * j) - minValue);
-							graphics.lineTo(w - hostComponent.marginRight + 2, h - hostComponent.marginBottom + (minValue/numberLandMarkBelow * j) - minValue);
-						}  
+							graphics.moveTo(hostComponent.marginLeft-2, h - hostComponent.marginBottom + ((minValue*heightChart/(minValue + maxValue))/numberLandMarkBelow * j) - minValue*heightChart/(minValue + maxValue));
+							graphics.lineTo(w - hostComponent.marginRight + 2, h - hostComponent.marginBottom + ((minValue*heightChart/(minValue + maxValue))/numberLandMarkBelow * j) - minValue*heightChart/(minValue + maxValue));
+						}   
 						//============================================
 						//draw label left value and right percent
 						//============================================
@@ -100,8 +96,8 @@
 							var positiveAboveValue:TextField = new TextField();
 							positiveAboveValue.text = String(Math.ceil(maxValue/numberLineLandMark * k));
 							positiveAboveValue.x = - 7;
-							positiveAboveValue.y = h - (maxValue/numberLineLandMark * k) - minValue - hostComponent.marginBottom - 5;
-							positiveAboveValue.width = 15;
+							positiveAboveValue.y = h - ((maxValue*heightChart/(minValue + maxValue))/numberLineLandMark * k) - minValue*heightChart/(minValue + maxValue) - hostComponent.marginBottom - 8;
+							positiveAboveValue.width = 30;
 							positiveAboveValue.setTextFormat(horizontalFormat);
 							displayLabel.addChild(positiveAboveValue);
 						}
@@ -110,15 +106,15 @@
 							var negativeBelowValue:TextField = new TextField();
 							negativeBelowValue.text = "-" + String(Math.ceil(minValue/numberLandMarkBelow * k));
 							negativeBelowValue.x = -7;
-							negativeBelowValue.y = h - hostComponent.marginBottom + (minValue/numberLandMarkBelow * k) - minValue - 5;
-							negativeBelowValue.width = 15;
+							negativeBelowValue.y = h - hostComponent.marginBottom + ((minValue*heightChart/(minValue + maxValue))/numberLandMarkBelow * k) - minValue*heightChart/(minValue + maxValue) - 8;
+							negativeBelowValue.width = 30;
 							negativeBelowValue.setTextFormat(horizontalFormat);
 							displayLabel.addChild(negativeBelowValue);
 						}
 					}else {
 						//position for title
 						titleLabel.x = 0;
-						titleLabel.y = h - maxValue - 40;
+						titleLabel.y = 0;
 						titleLabel.width = w;
 						//============================================
 						//draw coordinate for chart
@@ -127,18 +123,18 @@
 						//graphics.clear();
 						graphics.lineStyle(1, 0xDADADA);
 					//	graphics.moveTo(hostComponent.marginLeft, h - hostComponent.marginBottom);
-					//	graphics.lineTo(hostComponent.marginLeft, h - (maxValue + hostComponent.marginBottom));
+					//	graphics.lineTo(hostComponent.marginLeft, hostComponent.marginTop);
 						//draw vertical axis
 						graphics.moveTo(hostComponent.marginLeft-2, h - hostComponent.marginBottom);
 						graphics.lineTo(w - hostComponent.marginRight + 2, h - hostComponent.marginBottom);
 						//draw percent axis
 					//	graphics.moveTo(w - hostComponent.marginRight, h - hostComponent.marginBottom);
-					//	graphics.lineTo(w - hostComponent.marginRight, h - (maxValue + hostComponent.marginBottom));
+					//	graphics.lineTo(w - hostComponent.marginRight, hostComponent.marginTop);
 						
 						//draw landmark gap for coordinate axis
 						for (j = 1; j <= numberLineLandMark; j++) {
-							graphics.moveTo(hostComponent.marginLeft-2, h - hostComponent.marginBottom - (maxValue/numberLineLandMark * j));
-							graphics.lineTo(w - hostComponent.marginRight + 2, h - hostComponent.marginBottom - (maxValue/numberLineLandMark * j));
+							graphics.moveTo(hostComponent.marginLeft-2, h - hostComponent.marginBottom - (heightChart/numberLineLandMark * j));
+							graphics.lineTo(w - hostComponent.marginRight + 2, h - hostComponent.marginBottom - (heightChart/numberLineLandMark * j));
 						}
 						//============================================
 						//draw label left value and right percent
@@ -148,7 +144,7 @@
 							var leftValue:TextField = new TextField();
 							leftValue.text = String(Math.ceil(maxValue/numberLineLandMark * k));
 							leftValue.x = - 7;
-							leftValue.y = h - (maxValue/numberLineLandMark * k) - (hostComponent.marginBottom+8);
+							leftValue.y = h - (heightChart/numberLineLandMark * k) - (hostComponent.marginBottom+8);
 							leftValue.width = 30;
 							leftValue.setTextFormat(horizontalFormat);
 							displayLabel.addChild(leftValue);
@@ -170,38 +166,31 @@
 						//position for title
 						titleLabel.x = 0;
 						titleLabel.y = 0;
-						titleLabel.width = hostComponent.maxValue;
+						titleLabel.width = w;
 						//============================================
 						//draw coordinate for chart
 						//============================================
 						graphics.clear();
 						graphics.lineStyle(1, 0xDADADA);
-						//draw positive section	
-						//draw right vertical axis
-						graphics.moveTo(1 + hostComponent.marginLeft + minValue, hostComponent.marginTop);
-						graphics.lineTo(1 + hostComponent.marginLeft + maxValue + minValue, hostComponent.marginTop);
+						//draw vertical axis
+					//	graphics.moveTo(1 + hostComponent.marginLeft, hostComponent.marginTop);
+					//	graphics.lineTo(1 + hostComponent.marginLeft + widthChart, hostComponent.marginTop);
 						//draw horizontal axis
-						graphics.moveTo(1 + hostComponent.marginLeft + minValue, hostComponent.marginTop);
-						graphics.lineTo(1 + hostComponent.marginLeft + minValue, h - hostComponent.marginBottom + 2);
-						//draw right value axis
-						graphics.moveTo(1 + hostComponent.marginLeft + minValue, h - hostComponent.marginBottom);
-						graphics.lineTo(1 + hostComponent.marginLeft + maxValue + minValue, h - hostComponent.marginBottom);
-						//draw negative section
-						//draw left vertical axis
-						graphics.moveTo(1 + hostComponent.marginLeft + minValue, hostComponent.marginTop);
-						graphics.lineTo(1 + hostComponent.marginLeft, hostComponent.marginTop);
-						//draw left value axis
-						graphics.moveTo(1 + hostComponent.marginLeft + minValue, h - hostComponent.marginBottom);
-						graphics.lineTo(1 + hostComponent.marginLeft, h - hostComponent.marginBottom);
+						graphics.moveTo(1 + hostComponent.marginLeft + minValue*widthChart/(minValue + maxValue), hostComponent.marginTop);
+						graphics.lineTo(1 + hostComponent.marginLeft + minValue*widthChart/(minValue + maxValue), h - hostComponent.marginBottom + 2);
+						//draw value axis
+					//	graphics.moveTo(1 + hostComponent.marginLeft, h - hostComponent.marginBottom);
+					//	graphics.lineTo(1 + hostComponent.marginLeft + widthChart, h - hostComponent.marginBottom);
+
 						//draw landmark gap for positive right section
 						for (j= 1; j <= numberLineLandMark; j++) {
-							graphics.moveTo(1 + hostComponent.marginLeft + (maxValue/numberLineLandMark * j) + minValue, hostComponent.marginTop);
-							graphics.lineTo(1 + hostComponent.marginLeft + (maxValue/numberLineLandMark * j) + minValue, h - hostComponent.marginBottom + 2);
+							graphics.moveTo(1 + hostComponent.marginLeft + ((maxValue*widthChart/(minValue + maxValue))/numberLineLandMark * j) + minValue*widthChart/(minValue + maxValue), hostComponent.marginTop);
+							graphics.lineTo(1 + hostComponent.marginLeft + ((maxValue*widthChart/(minValue + maxValue))/numberLineLandMark * j) + minValue*widthChart/(minValue + maxValue), h - hostComponent.marginBottom + 2);
 						}
 						//draw landmark gap for negative left section
 						for (j = 1; j <= numberLandMarkBelow; j++) {
-							graphics.moveTo(1 + hostComponent.marginLeft - (minValue/numberLandMarkBelow * j) + minValue, hostComponent.marginTop);
-							graphics.lineTo(1 + hostComponent.marginLeft - (minValue/numberLandMarkBelow * j) + minValue, h - hostComponent.marginBottom + 2);
+							graphics.moveTo(1 + hostComponent.marginLeft - ((minValue*widthChart/(minValue + maxValue))/numberLandMarkBelow * j) + minValue*widthChart/(minValue + maxValue), hostComponent.marginTop);
+							graphics.lineTo(1 + hostComponent.marginLeft - ((minValue*widthChart/(minValue + maxValue))/numberLandMarkBelow * j) + minValue*widthChart/(minValue + maxValue), h - hostComponent.marginBottom + 2);
 						}
 						//============================================
 						//draw label left value and right percent
@@ -217,7 +206,7 @@
 							
 							var positiveRightValue:TextField = new TextField();
 							positiveRightValue.text = String(Math.ceil(maxValue/numberLineLandMark * k));
-							positiveRightValue.x = hostComponent.marginLeft + (maxValue/numberLineLandMark * k) - 3 + minValue;
+							positiveRightValue.x = hostComponent.marginLeft + ((maxValue*widthChart/(minValue + maxValue))/numberLineLandMark * k) - 3 + minValue*widthChart/(minValue + maxValue);
 							positiveRightValue.y = h - hostComponent.marginBottom + 2;
 							
 							positiveRightValue.setTextFormat(verticalFormat);
@@ -226,7 +215,7 @@
 						for (k = 0; k <= numberLandMarkBelow; k++) {
 							var negativeLeftValue:TextField = new TextField();
 							negativeLeftValue.text = String(Math.ceil(minValue/numberLandMarkBelow * k));
-							negativeLeftValue.x = hostComponent.marginLeft - (minValue/numberLandMarkBelow * k) - 3 + minValue;
+							negativeLeftValue.x = hostComponent.marginLeft - ((minValue*widthChart/(minValue + maxValue))/numberLandMarkBelow * k) - 3 + minValue*widthChart/(minValue + maxValue);
 							negativeLeftValue.y = h - hostComponent.marginBottom + 2;
 							
 							negativeLeftValue.setTextFormat(verticalFormat);
@@ -236,23 +225,23 @@
 						//position for title
 						titleLabel.x = 0;
 						titleLabel.y = 0;
-						titleLabel.width = hostComponent.maxValue;
+						titleLabel.width = w;
 						//draw
 						graphics.clear();
 						graphics.lineStyle(1, 0xDADADA);
 						//draw vertical axis
-						graphics.moveTo(1 + hostComponent.marginLeft, hostComponent.marginTop);
-						graphics.lineTo(1 + hostComponent.marginLeft + maxValue, hostComponent.marginTop);
+					//	graphics.moveTo(1 + hostComponent.marginLeft, hostComponent.marginTop);
+					//	graphics.lineTo(1 + hostComponent.marginLeft + widthChart, hostComponent.marginTop);
 						//draw horizontal axis
 						graphics.moveTo(1 + hostComponent.marginLeft, hostComponent.marginTop);
 						graphics.lineTo(1 + hostComponent.marginLeft, h - hostComponent.marginBottom + 2);
 						//draw value axis
-						graphics.moveTo(1 + hostComponent.marginLeft, h - hostComponent.marginBottom);
-						graphics.lineTo(1 + hostComponent.marginLeft + maxValue, h - hostComponent.marginBottom);
+					//	graphics.moveTo(1 + hostComponent.marginLeft, h - hostComponent.marginBottom);
+					//	graphics.lineTo(1 + hostComponent.marginLeft + widthChart, h - hostComponent.marginBottom);
 						//draw landmark gap for coordinate axis
 						for (j= 1; j <= numberLineLandMark; j++) {
-							graphics.moveTo(1 + hostComponent.marginLeft + (maxValue/numberLineLandMark * j), hostComponent.marginTop);
-							graphics.lineTo(1 + hostComponent.marginLeft + (maxValue/numberLineLandMark * j), h - hostComponent.marginBottom + 2);
+							graphics.moveTo(1 + hostComponent.marginLeft + (widthChart/numberLineLandMark * j), hostComponent.marginTop);
+							graphics.lineTo(1 + hostComponent.marginLeft + (widthChart/numberLineLandMark * j), h - hostComponent.marginBottom + 2);
 						}
 						
 						//============================================
@@ -269,7 +258,7 @@
 							
 							var bottomValue:TextField = new TextField();
 							bottomValue.text = String(Math.ceil(maxValue/numberLineLandMark * k));
-							bottomValue.x = hostComponent.marginLeft + (maxValue/numberLineLandMark * k) - 3;
+							bottomValue.x = hostComponent.marginLeft + (widthChart/numberLineLandMark * k) - 3;
 							bottomValue.y = h - hostComponent.marginBottom + 2;
 							
 							bottomValue.setTextFormat(verticalFormat);

@@ -36,25 +36,27 @@ package fxrialab.controls.charts
 		private var border:Sprite = new Sprite();
 		
 		public function draw():void {
-			//trace('value: ',data.value);
+			//trace('value: ', data.value*data.heightChart/data.maxValue);
 			var gradType:String = GradientType.LINEAR;
-		//	var colors:Array = [data.fill, data.fill, data.fill];
-		//	var alphas:Array = [1, 0.6, 0.3];
-		//	var ratios:Array = [0, 30, 255];
+			var colors:Array = [data.fill, data.fill, data.fill];
+			var alphas:Array = [1, 0.6, 0.3];
+			var ratios:Array = [0, 30, 255];
 			var matrix:Matrix = new Matrix();
 			if(data.minValue) {
-				matrix.createGradientBox(data.barWidth, data.value, 90*(Math.PI/180), data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom - data.minValue);
+				matrix.createGradientBox(data.barWidth, data.value*data.heightChart/(data.maxValue + data.minValue), 90*(Math.PI/180), data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - (data.value*data.heightChart/(data.maxValue + data.minValue)) - data.marginBottom - (data.minValue*data.heightChart/(data.maxValue+data.minValue)));
 			}else {
-				matrix.createGradientBox(data.barWidth, data.value, 90*(Math.PI/180), data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom);
+				matrix.createGradientBox(data.barWidth, data.value*data.heightChart/data.maxValue, 90*(Math.PI/180), data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom);
 			}
 			
 			//bar = new Sprite();
 			bar.graphics.clear();
-			bar.graphics.beginFill(data.fill); //beginGradientFill(gradType, colors, alphas, ratios, matrix);
+			bar.graphics.beginFill(data.fill); 
+			//bar.graphics.beginGradientFill(gradType, colors, alphas, ratios, matrix);
 			if(data.minValue){
-				bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom - data.minValue, data.barWidth, data.value);
+				
+				bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - (data.value*data.heightChart/(data.maxValue + data.minValue)) - data.marginBottom - (data.minValue*data.heightChart/(data.maxValue+data.minValue)), data.barWidth, data.value*data.heightChart/(data.maxValue+data.minValue));
 			}else {
-				bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom, data.barWidth, data.value);
+				bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom, data.barWidth, data.value*data.heightChart/data.maxValue);
 			}
 			bar.graphics.endFill();
 			
@@ -67,14 +69,14 @@ package fxrialab.controls.charts
 			//border.graphics.clear();
 			//border.graphics.lineStyle(2, 0xFFFFFF);
 			if(data.minValue) {
-				border.graphics.moveTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.marginBottom - data.minValue);
-				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom - data.minValue);
-				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - data.value - data.marginBottom - data.minValue);
-				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - data.marginBottom - data.minValue);
+				border.graphics.moveTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.marginBottom - (data.minValue*data.heightChart/(data.maxValue+data.minValue)));
+				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - (data.value*data.heightChart/(data.maxValue + data.minValue)) - data.marginBottom - (data.minValue*data.heightChart/(data.maxValue+data.minValue)));
+				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - (data.value*data.heightChart/(data.maxValue + data.minValue)) - data.marginBottom - (data.minValue*data.heightChart/(data.maxValue+data.minValue)));
+				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - data.marginBottom - (data.minValue*data.heightChart/(data.maxValue+data.minValue)));
 			}else {
 				border.graphics.moveTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.marginBottom);
-				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.value - data.marginBottom);
-				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - data.value - data.marginBottom);
+				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom);
+				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom);
 				border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - data.marginBottom);
 			}
 
@@ -99,9 +101,9 @@ package fxrialab.controls.charts
 			labelField.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum;
 			if(data.minValue) {
 				if(data.value < 0) {
-					labelField.y = data.height - data.marginBottom - (data.value - 10) - data.minValue;
+					labelField.y = data.height - data.marginBottom - ((data.value*data.heightChart/(data.maxValue+data.minValue)) - 10) - (data.minValue*data.heightChart/(data.maxValue+data.minValue));
 				}else {
-					labelField.y = data.height - data.marginBottom - (data.value + 12) - data.minValue;
+					labelField.y = data.height - data.marginBottom - ((data.value*data.heightChart/(data.maxValue+data.minValue)) + 30) - (data.minValue*data.heightChart/(data.maxValue+data.minValue));
 				}
 			}else {
 				labelField.y = data.height - data.marginBottom + 5;
@@ -118,12 +120,12 @@ package fxrialab.controls.charts
 			valueField.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum;
 			if(data.minValue) {
 				if(data.value < 0) {
-					valueField.y = data.height - data.marginBottom - (data.value - 3) - data.minValue;
+					valueField.y = data.height - data.marginBottom - ((data.value*data.heightChart/(data.maxValue+data.minValue)) - 3) - (data.minValue*data.heightChart/(data.maxValue+data.minValue));
 				}else {
-					valueField.y = data.height - data.marginBottom - (data.value + 22) - data.minValue;
+					valueField.y = data.height - data.marginBottom - ((data.value*data.heightChart/(data.maxValue+data.minValue)) + 22) - (data.minValue*data.heightChart/(data.maxValue+data.minValue));
 				}
 			}else {
-				valueField.y = data.height - data.marginBottom - (data.value + 12);
+				valueField.y = data.height - data.marginBottom - ((data.value*data.heightChart/data.maxValue) + 12);
 			}
 			valueField.width = data.barWidth;
 			valueField.setTextFormat(valueFieldFormat);
@@ -171,7 +173,7 @@ package fxrialab.controls.charts
 			//trace('px', p.x);
 			
 			tooltip.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth;
-			tooltip.y = data.height - data.value - data.marginBottom;
+			tooltip.y = data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom;
 			trace('tt.x', tooltip.x);
 			this.stage.addChild(tooltip);
 			
@@ -181,7 +183,7 @@ package fxrialab.controls.charts
 		private function moveTooltip(evt:MouseEvent):void {
 			if (tooltip) {
 				tooltip.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth;
-				tooltip.y = data.height - data.value - data.marginBottom;
+				tooltip.y = data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom;
 			}
 		}
 		

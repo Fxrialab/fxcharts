@@ -3,6 +3,8 @@ package fxrialab.controls.charts
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
+	import fxrialab.utils.ArrayUtilities;
+	
 	import mx.collections.IList;
 	import mx.core.UIComponent;
 	
@@ -110,6 +112,7 @@ package fxrialab.controls.charts
 			
 			var angle:int = 0;
 			var radius:Number;
+			var getRadius:Array = [];
 			for(var i:int=0; i < dataProvider.length; i++){	
 				//update data
 				var pie:PieSprite = pies[i] as PieSprite;
@@ -123,8 +126,11 @@ package fxrialab.controls.charts
 				pie.getFill.color = fillColor;
 				//trace(fillColor);
 				angle += (pie.data[valueField] / sumValue * 360)+0.5;
-				radius = (h - (marginTop*2 + marginBottom*2))/2
 				
+				getRadius.push(w);
+				getRadius.push(h);
+				radius = ArrayUtilities.findMin(getRadius)/3;
+
 				pie.data.radius = radius;
 				pie.data.arrays = arrays;
 
@@ -245,6 +251,6 @@ package fxrialab.controls.charts
 			redrawSkin = true;
 			invalidateProperties();
 		}
-		
+
 	}
 }

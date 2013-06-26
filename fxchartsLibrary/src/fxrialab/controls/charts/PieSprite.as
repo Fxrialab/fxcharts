@@ -143,8 +143,7 @@ package fxrialab.controls.charts
 			txtLabelField.width = txtLabelField.textWidth + 10;
 			txtLabelField.height = 20;
 			txtLabelField.setTextFormat(txtLabelFormat);
-			/*trace('labelXXX:', txtLabelField.x);
-			trace('labelYYY:', txtLabelField.y);*/
+
 			addChild(txtLabelField);
 			//get data for draw pie
 			var commandsData:Vector.<Object> = DrawHelper.Arc(data.centerX, data.centerY, data.radius, data.startAngle, data.arcData);

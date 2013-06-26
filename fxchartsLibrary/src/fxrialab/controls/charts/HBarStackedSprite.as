@@ -32,11 +32,11 @@ package fxrialab.controls.charts
 			var alphas:Array = [1, 0.6, 0.3];
 			var ratios:Array = [0, 30, 255];
 			var matrix:Matrix = new Matrix();
-			matrix.createGradientBox(data.barWidth, data.value, 90*(Math.PI/180), data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.sum - data.marginBottom);
+			matrix.createGradientBox(data.barWidth, data.value*data.heightChart/data.maxValue, 90*(Math.PI/180), data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.sum*data.heightChart/data.maxValue - data.marginBottom);
 			
 			var bar:Sprite = new Sprite();
 			bar.graphics.beginGradientFill(gradType, colors, alphas, ratios, matrix);
-			bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.sum - data.marginBottom, data.barWidth, data.value);
+			bar.graphics.drawRect(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.sum*data.heightChart/data.maxValue - data.marginBottom, data.barWidth, data.value*data.heightChart/data.maxValue);
 			bar.graphics.endFill();
 			
 			addChild(bar);
@@ -44,8 +44,8 @@ package fxrialab.controls.charts
 			var border:Sprite = new Sprite();
 			border.graphics.lineStyle(2, 0xFFFFFF);
 			border.graphics.moveTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.marginBottom);
-			border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.sum - data.marginBottom);
-			border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - data.sum - data.marginBottom);
+			border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum, data.height - data.sum*data.heightChart/data.maxValue - data.marginBottom);
+			border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - data.sum*data.heightChart/data.maxValue - data.marginBottom);
 			border.graphics.lineTo(data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth, data.height - data.marginBottom);
 			
 			addChild(border);

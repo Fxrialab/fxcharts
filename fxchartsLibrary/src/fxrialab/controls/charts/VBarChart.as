@@ -134,9 +134,13 @@ package fxrialab.controls.charts
 						
 						sbar.data.maxValue = maxValue;
 						sbar.data.minValue = minValue;
+						
 						sbar.data.marginTop = marginTop;
 						sbar.data.marginLeft = marginLeft;
 						sbar.data.marginBottom = marginBottom;
+						sbar.data.marginRight = marginRight;
+						
+						sbar.data.widthChart = w - (marginLeft + marginRight);
 						//draw
 						sbar.draw();
 					}
@@ -167,6 +171,9 @@ package fxrialab.controls.charts
 					bar.data.marginTop = marginTop;
 					bar.data.marginLeft = marginLeft;
 					bar.data.marginBottom = marginBottom;
+					bar.data.marginRight = marginRight;
+					
+					bar.data.widthChart = w - (marginLeft + marginRight);
 					//draw
 					bar.draw();
 				}

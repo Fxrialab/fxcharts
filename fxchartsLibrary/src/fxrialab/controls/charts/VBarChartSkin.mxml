@@ -7,9 +7,9 @@
 		[HostComponent("fxrialab.controls.charts.VBarChart")]
 	</fx:Metadata>
 	
-	<s:filters>
+	<!--<s:filters>
 		<s:DropShadowFilter distance="2" angle="360" color="0x000000" alpha="0.4" blurX="5" blurY="2" quality="5" />
-	</s:filters>
+	</s:filters>-->
 	
 	<mx:UIComponent id="vBarHolder" />
 </s:Skin>

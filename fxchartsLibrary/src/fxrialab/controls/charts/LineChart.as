@@ -132,8 +132,14 @@ package fxrialab.controls.charts
 				line.data.align = getStyle('leftAlign');
 				line.data.stroke = stroke;
 				
+				line.data.marginTop = marginTop;
 				line.data.marginBottom = marginBottom;
 				line.data.marginLeft = marginLeft;	
+				line.data.marginRight = marginRight;
+				
+				line.data.widthChart = w - (marginLeft + marginRight);
+				line.data.heightChart = h - (marginTop + marginBottom);
+				
 				line.data.valueField = valueField;
 				//determine direction for line based on coordinate axis
 				line.data.direction = direction;

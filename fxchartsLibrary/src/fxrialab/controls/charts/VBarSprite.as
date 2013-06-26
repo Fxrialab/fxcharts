@@ -36,17 +36,17 @@ package fxrialab.controls.charts
 			var ratios:Array = [0, 128, 255];
 			var matrix:Matrix = new Matrix();
 			if (data.minValue) {
-				matrix.createGradientBox(data.value, data.barHeight, 0, data.marginLeft + data.minValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+				matrix.createGradientBox(data.value*data.widthChart/(data.maxValue+data.minValue), data.barHeight, 0, data.marginLeft + data.minValue*data.widthChart/(data.maxValue+data.minValue), data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
 			}else {
-				matrix.createGradientBox(data.value, data.barHeight, 0, data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+				matrix.createGradientBox(data.value*data.widthChart/data.maxValue, data.barHeight, 0, data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
 			}
 			var bar:Sprite = new Sprite();
 
 			bar.graphics.beginGradientFill(gradType, colors, alphas, ratios, matrix);
 			if (data.minValue) {
-				bar.graphics.drawRect(data.marginLeft + data.minValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight), data.value, data.barHeight);
+				bar.graphics.drawRect(data.marginLeft + data.minValue*data.widthChart/(data.maxValue+data.minValue) + 1, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight), data.value*data.widthChart/(data.maxValue+data.minValue), data.barHeight);
 			}else {
-				bar.graphics.drawRect(data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight), data.value, data.barHeight);
+				bar.graphics.drawRect(data.marginLeft + 1, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight), data.value*data.widthChart/data.maxValue, data.barHeight);
 			}
 			bar.graphics.endFill();
 			
@@ -56,18 +56,18 @@ package fxrialab.controls.charts
 			border.graphics.lineStyle(2, 0xFFFFFF);
 			
 			if (data.minValue) {
-				border.graphics.moveTo(data.marginLeft + data.minValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
-				border.graphics.lineTo(data.marginLeft + data.value + data.minValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
-				border.graphics.lineTo(data.marginLeft + data.value + data.minValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
-				border.graphics.lineTo(data.marginLeft + data.minValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
+				border.graphics.moveTo(data.marginLeft + data.minValue*data.widthChart/(data.maxValue+data.minValue) + 1, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+				border.graphics.lineTo(data.marginLeft + data.value*data.widthChart/(data.maxValue+data.minValue) + data.minValue*data.widthChart/(data.maxValue+data.minValue) + 1, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+				border.graphics.lineTo(data.marginLeft + data.value*data.widthChart/(data.maxValue+data.minValue) + data.minValue*data.widthChart/(data.maxValue+data.minValue) + 1, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
+				border.graphics.lineTo(data.marginLeft + data.minValue*data.widthChart/(data.maxValue+data.minValue) + 1, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
 			}else {
-				border.graphics.moveTo(data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
-				border.graphics.lineTo(data.marginLeft + data.value, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
-				border.graphics.lineTo(data.marginLeft + data.value, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
-				border.graphics.lineTo(data.marginLeft, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
+				border.graphics.moveTo(data.marginLeft + 1, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+				border.graphics.lineTo(data.marginLeft + data.value*data.widthChart/data.maxValue + 1, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+				border.graphics.lineTo(data.marginLeft + data.value*data.widthChart/data.maxValue + 1, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
+				border.graphics.lineTo(data.marginLeft + 1, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
 			}
 			
-			addChild(border);		
+			//addChild(border);		
 			//text format for label field and value field
 			var labelFieldFormat:TextFormat = new TextFormat();
 			labelFieldFormat.size = data.size;
@@ -86,9 +86,9 @@ package fxrialab.controls.charts
 			labelField.text = data.label;
 			if(data.minValue) {
 				if (data.value < 0) {
-					labelField.x = data.marginLeft + data.value + data.minValue - labelField.textWidth + 5;
+					labelField.x = data.marginLeft + data.value*data.widthChart/(data.maxValue+data.minValue) + data.minValue*data.widthChart/(data.maxValue+data.minValue) - labelField.textWidth + 15;
 				}else {
-					labelField.x = data.marginLeft + data.value + data.minValue + 5;
+					labelField.x = data.marginLeft + data.value*data.widthChart/(data.maxValue+data.minValue) + data.minValue*data.widthChart/(data.maxValue+data.minValue) + 5;
 				}
 			}else {
 				labelField.x = - labelField.textWidth + 10;
@@ -101,12 +101,12 @@ package fxrialab.controls.charts
 			valueField.text = data.value;
 			if(data.minValue) {
 				if (data.value < 0) {
-					valueField.x = data.marginLeft + data.value + data.minValue - valueField.textWidth - 2;
+					valueField.x = data.marginLeft + data.value*data.widthChart/(data.maxValue+data.minValue) + data.minValue*data.widthChart/(data.maxValue+data.minValue) - valueField.textWidth - 2;
 				}else {
-					valueField.x = data.marginLeft + data.value + data.minValue + 5;
+					valueField.x = data.marginLeft + data.value*data.widthChart/(data.maxValue+data.minValue) + data.minValue*data.widthChart/(data.maxValue+data.minValue) + 5;
 				}
 			}else {
-				valueField.x = data.marginLeft + data.value + 5;
+				valueField.x = data.marginLeft + data.value*data.widthChart/data.maxValue + 5;
 			}
 			valueField.y = data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight - 3);
 			valueField.setTextFormat(valueFieldFormat);
