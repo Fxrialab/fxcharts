@@ -3,6 +3,8 @@ package fxrialab.controls.charts
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	
+	import fxrialab.utils.ArrayUtilities;
+	
 	import mx.collections.IList;
 	import mx.core.UIComponent;
 	
@@ -100,6 +102,7 @@ package fxrialab.controls.charts
 			
 			var angle:int = 0;
 			var outerRadius:Number;
+			var getOuterRadius:Array = [];
 			for(var i:int=0; i < dataProvider.length; i++){	
 				//update data
 				var doughnut:DoughnutSprite = doughnuts[i] as DoughnutSprite;
@@ -113,7 +116,10 @@ package fxrialab.controls.charts
 				doughnut.getFill.color = fillColor;
 
 				angle += (doughnut.data[valueField] / sumValue * 360) + 1;
-				outerRadius = (h- (marginTop*2 + marginBottom*2))/2
+				
+				getOuterRadius.push(w);
+				getOuterRadius.push(h);
+				outerRadius = ArrayUtilities.findMin(getOuterRadius)/3;
 
 				doughnut.data.outerRadius = outerRadius;
 				doughnut.data.innerRadius = outerRadius / 2;

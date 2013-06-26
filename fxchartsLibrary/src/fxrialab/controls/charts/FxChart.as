@@ -51,7 +51,7 @@ package fxrialab.controls.charts
 		private var _config:Array;
 		private var _marginTop:Number = 30;
 		private var _marginRight:Number = 10;
-		private var _marginBottom:Number = 10;
+		private var _marginBottom:Number = 30;
 		private var _marginLeft:Number = 30;
 
 		private var _numberLineLandMarkDefault:Number = 10;
@@ -116,9 +116,9 @@ package fxrialab.controls.charts
 				//var fill:String = (dataProvider.getItemAt(i) as Object)[fillField];
 				var getFill:String = ((dataProvider.getItemAt(i) as Object)[fillField] == null) ? "0xDC2400" : (dataProvider.getItemAt(i) as Object)[fillField];
 				var fill:uint = (getFill.search('#') == 0) ? uint(getFill.replace('#', '0x')) : uint(getFill);
-				var stroke:String = (dataProvider.getItemAt(i) as Object)[strokeField];
+				//var stroke:String = (dataProvider.getItemAt(i) as Object)[strokeField];
 				var title:String = (dataProvider.getItemAt(i) as Object)[labelField];
-				var data:Object = (dataProvider.getItemAt(i) as Object)[_dataSeriesField];
+				//var data:Object = (dataProvider.getItemAt(i) as Object)[_dataSeriesField];
 				//charts.addItem( { type: type, fill: fill, stroke: stroke, data: data } );
 				//get min, max for arrays
 				var dataItemsChart:Object = dataProvider.getItemAt(i);
@@ -127,9 +127,9 @@ package fxrialab.controls.charts
 				var chartFirstDataItem:Object = dataProvider.getItemAt(0);
 
 				//get length of each type for group charts
-				if (redrawSkin){				
-					positiveValueArrays = new Array();
-					negativeValueArrays = new Array();
+				if (redrawSkin){			
+					//positiveValueArrays = new Array();
+					//negativeValueArrays = new Array();
 					
 				}
 				
@@ -179,7 +179,7 @@ package fxrialab.controls.charts
 				if(typeOfBar != 'undefined' && typeOfBar != CLUSTERED && typeOfBar != STACKED)
 					typeOfBar = CLUSTERED;
 				
-				trace('typebar', typeOfBar);
+				//trace('typebar', typeOfBar);
 			}
 			
 			if (typeOfBar == STACKED) {
@@ -336,7 +336,7 @@ package fxrialab.controls.charts
 										if(seriesChartNumber.length > 1 && typeOfBar && typeOfBar == CLUSTERED)
 										{
 											barShift += barWidth/seriesChartNumber.length;
-											trace('barShift ', barShift);
+											//trace('barShift ', barShift);
 											chart.x = barShift;
 											addChild(chart);
 										}
@@ -360,7 +360,7 @@ package fxrialab.controls.charts
 											barShift += barHeight/seriesChartNumber.length;
 											chart.y = -barShift;
 										}
-										trace('chart.y', chart.y);
+										//trace('chart.y', chart.y);
 										addChild(chart);
 									}
 								}
@@ -385,7 +385,7 @@ package fxrialab.controls.charts
 			var getFill:String = (data[fillField] == null) ? "0xDC2400" : data[fillField];
 			var fill:uint = (getFill.search('#') == 0) ? uint(getFill.replace('#', '0x')) : uint(getFill);
 			var dataItems:IList = new ArrayList(data[_dataSeriesField] as Array);
-			trace("number series:", seriesChartNumber.length);
+			//trace("number series:", seriesChartNumber.length);
 
 			switch (chartType)
 			{
@@ -498,8 +498,6 @@ package fxrialab.controls.charts
 				chart.width = w;
 				chart.height = h;
 			}
-			
-			
 		}
 		
 		/*private function resizeHandler(event:Event):void

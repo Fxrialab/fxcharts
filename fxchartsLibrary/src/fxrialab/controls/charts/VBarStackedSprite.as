@@ -32,21 +32,21 @@ package fxrialab.controls.charts
 			var alphas:Array = [0.3, 0.6, 1];
 			var ratios:Array = [0, 128, 255];
 			var matrix:Matrix = new Matrix();
-			matrix.createGradientBox(data.value, data.barHeight, 0, data.marginLeft + data.sum - data.value, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+			matrix.createGradientBox(data.value*data.widthChart/data.maxValue, data.barHeight, 0, data.marginLeft + data.sum*data.widthChart/data.maxValue - data.value*data.widthChart/data.maxValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
 			
 			var bar:Sprite = new Sprite();
 			bar.graphics.beginGradientFill(gradType, colors, alphas, ratios, matrix);
-			bar.graphics.drawRect(data.marginLeft + data.sum - data.value, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight), data.value, data.barHeight);
+			bar.graphics.drawRect(data.marginLeft + data.sum*data.widthChart/data.maxValue - data.value*data.widthChart/data.maxValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight), data.value*data.widthChart/data.maxValue, data.barHeight);
 			bar.graphics.endFill();
 			
 			addChild(bar);
 			//draw border
 			var border:Sprite = new Sprite();
 			border.graphics.lineStyle(2, 0xFFFFFF);
-			border.graphics.moveTo(data.marginLeft + data.sum - data.value, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
-			border.graphics.lineTo(data.marginLeft + data.sum, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
-			border.graphics.lineTo(data.marginLeft + data.sum, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
-			border.graphics.lineTo(data.marginLeft + data.sum - data.value, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
+			border.graphics.moveTo(data.marginLeft + data.sum*data.widthChart/data.maxValue - data.value*data.widthChart/data.maxValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+			border.graphics.lineTo(data.marginLeft + data.sum*data.widthChart/data.maxValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet + data.barHeight));
+			border.graphics.lineTo(data.marginLeft + data.sum*data.widthChart/data.maxValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
+			border.graphics.lineTo(data.marginLeft + data.sum*data.widthChart/data.maxValue - data.value*data.widthChart/data.maxValue, data.height - (data.gapCalc + data.barHeightCalc + data.marginBottom + data.offSet));
 			
 			addChild(border);
 		}

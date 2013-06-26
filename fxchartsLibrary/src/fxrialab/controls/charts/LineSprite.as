@@ -37,9 +37,9 @@ package fxrialab.controls.charts
 				pointHorizontal.graphics.drawCircle(0, 0, 3);
 				pointHorizontal.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth/2;
 				if(data.minValue) {				
-					pointHorizontal.y = data.height - data.value - data.marginBottom - data.minValue;
+					pointHorizontal.y = data.height - data.value*data.heightChart/(data.maxValue+data.minValue) - data.marginBottom - data.minValue*data.heightChart/(data.maxValue+data.minValue);
 				}else {
-					pointHorizontal.y = data.height - data.value - data.marginBottom;
+					pointHorizontal.y = data.height - data.value*data.heightChart/data.maxValue - data.marginBottom;
 				}
 
 				addChild(pointHorizontal);
@@ -49,9 +49,9 @@ package fxrialab.controls.charts
 				pointVertical.graphics.beginFill(data.stroke, 1);
 				pointVertical.graphics.drawCircle(0, 0, 3);
 				if(data.minValue) {
-					pointVertical.x = data.marginLeft + data.value + data.minValue;
+					pointVertical.x = data.marginLeft + data.value*data.widthChart/(data.maxValue+data.minValue) + data.minValue*data.widthChart/(data.maxValue+data.minValue);
 				}else {
-					pointVertical.x = data.marginLeft + data.value;
+					pointVertical.x = data.marginLeft + data.value*data.widthChart/data.maxValue;
 				}
 				pointVertical.y = data.height - (data.gapSum + data.barHeightSum + data.marginBottom + data.offSet + data.barHeight/2);
 				
