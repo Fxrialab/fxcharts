@@ -259,12 +259,15 @@ package fxrialab.controls.charts
 						
 					break;
 				case MouseEvent.ROLL_OVER:
+					if (hBar.hitTestPoint(evt.stageX, evt.stageY))
+					{
 						hBar.showTooltip();
 						hBar.addEventListener(MouseEvent.ROLL_OUT, handlerHBarMouseEvents);
+					}	
 					break;
-				case MouseEvent.ROLL_OUT:
-						hBar.hideTooltip();
+				case MouseEvent.ROLL_OUT:						
 						hBar.removeEventListener(MouseEvent.ROLL_OUT, handlerHBarMouseEvents);
+						hBar.hideTooltip();
 					break;
 			}
 		}

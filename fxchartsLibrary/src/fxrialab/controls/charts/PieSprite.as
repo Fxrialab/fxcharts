@@ -230,14 +230,6 @@ package fxrialab.controls.charts
 			if(tooltip){
 				tooltip.x = evt.stageX - (txtFieldTooltip.textWidth + 8)/2;
 				tooltip.y = evt.stageY - tooltip.height - 1;
-
-				
-				/*if(tooltip.x == 537 && tooltip.y == 270){
-					/*trace('labelX:', txtLabelField.x);
-					trace('labelY:', txtLabelField.y);
-					stage.removeChild(tooltip);
-					tooltip = null;
-				}*/
 			}
 			
 		}
