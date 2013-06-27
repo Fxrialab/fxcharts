@@ -155,12 +155,13 @@ package fxrialab.controls.charts
 			txtFormatTooltip.font = data.font;
 			txtFormatTooltip.size = 10;
 			txtFormatTooltip.color = 0xFFFFFF;
-			txtFormatTooltip.leftMargin = txtFormatTooltip.rightMargin = 4;
+			txtFormatTooltip.leftMargin = txtFormatTooltip.rightMargin = 2;
 			
 			txtFieldTooltip.defaultTextFormat = txtFormatTooltip;
 			txtFieldTooltip.selectable = false;
 			txtFieldTooltip.height = 20;
-			//txtFieldTooltip.autoSize = 'center';
+			txtFieldTooltip.autoSize = 'left';
+			txtFieldTooltip.wordWrap = true;
 			txtFieldTooltip.htmlText = String(data.label +": "+ data.value);
 			txtFieldTooltip.setTextFormat(txtFormatTooltip);
 			
@@ -170,10 +171,10 @@ package fxrialab.controls.charts
 			var p:Point = new Point(this.mouseX, this.mouseY);
 			p = this.globalToLocal(p);
 			
-			tooltip.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth/2;
-			tooltip.y = data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom - tooltip.height - 2;
-		//	tooltip.x = p.x - (txtFieldTooltip.textWidth + 8)/2;
-		//	tooltip.y = p.y - tooltip.height - 1;
+		//	tooltip.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth/2;
+		//	tooltip.y = data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom - tooltip.height - 2;
+			tooltip.x = p.x - (txtFieldTooltip.textWidth + 8)/2;
+			tooltip.y = p.y - tooltip.height - 1;
 
 			this.stage.addChild(tooltip);
 			
@@ -182,10 +183,10 @@ package fxrialab.controls.charts
 		
 		private function moveTooltip(evt:MouseEvent):void {
 			if (tooltip) {
-				tooltip.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth/2;
-				tooltip.y = data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom - tooltip.height - 2;
-		//		tooltip.x = evt.stageX - (txtFieldTooltip.textWidth + 8)/2;
-		//		tooltip.y = evt.stageY - tooltip.height - 1;
+		//		tooltip.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth/2;
+		//		tooltip.y = data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom - tooltip.height - 2;
+				tooltip.x = evt.stageX - (txtFieldTooltip.textWidth + 8)/2;
+				tooltip.y = evt.stageY - tooltip.height - 1;
 			}
 		}
 		
