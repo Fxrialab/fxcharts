@@ -194,8 +194,8 @@ package fxrialab.controls.charts
 					bar.data.gapSum = _gap * i;
 					bar.data.width = w;
 					bar.data.height = h;
-					/*trace("width Component In Hbar: ", w);
-					trace("height Component In Hbar: ", h);*/
+				//	trace("width Component In Hbar: ", w);
+				//	trace("height Component In Hbar: ", h);
 					//trace('type of bar', seriesChartNumber);
 					bar.data.barWidth = (type == FxChart.CLUSTERED) ? barWidth/seriesChartNumber : barWidth;
 					bar.data.barWidthSum  = barWidth * i;
