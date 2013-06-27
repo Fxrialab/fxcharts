@@ -233,6 +233,7 @@ package fxrialab.controls.charts
 						var getMaxValue:Number = (typeOfBar == STACKED) ? ArrayUtilities.findMax(sumValueStackedBar) : ArrayUtilities.findMax(positiveValueArrays);
 						maxValue = getMaxValue + 30;
 					}
+					if (maxValue < 50) numberLineLandMarkDefault = 5;
 					if (negativeValueArrays && negativeValueArrays.length > 0) {
 						var getMinValue:Number = ArrayUtilities.findMin(negativeValueArrays);
 						var getNumberLandMark:Number = -getMinValue/(maxValue/numberLineLandMarkDefault);
@@ -293,8 +294,8 @@ package fxrialab.controls.charts
 									
 									if(config && config.length == 1){
 										var title:String = config[0][titleField];
-										var titleDefault:String = 'Please add title to config of chart';
-										coordinateAxis["title"] = (title || title !='') ? title : titleDefault;
+										var titleDefault:String = 'FxCharts Demo';
+										coordinateAxis["title"] = (title || title != null) ? title : titleDefault;
 									}								
 									coordinateAxis['marginTop'] = marginTop;
 									coordinateAxis['marginRight'] = marginRight;

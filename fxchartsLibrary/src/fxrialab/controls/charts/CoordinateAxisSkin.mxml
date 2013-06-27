@@ -26,7 +26,7 @@
 				minValue = hostComponent.minValue;
 				numberLineLandMark = hostComponent.numberLineLandMarkDefault;
 				
-				numberLineLandMark = Math.ceil(h/40);
+				//numberLineLandMark = Math.ceil(h/40);
 				
 				numberLandMarkBelow = hostComponent.numberLineLandMarkForNegativeAxis;
 				widthChart	= w - hostComponent.marginLeft - hostComponent.marginRight;
@@ -206,16 +206,16 @@
 							
 							var positiveRightValue:TextField = new TextField();
 							positiveRightValue.text = String(Math.ceil(maxValue/numberLineLandMark * k));
-							positiveRightValue.x = hostComponent.marginLeft + ((maxValue*widthChart/(minValue + maxValue))/numberLineLandMark * k) - 3 + minValue*widthChart/(minValue + maxValue);
+							positiveRightValue.x = hostComponent.marginLeft + ((maxValue*widthChart/(minValue + maxValue))/numberLineLandMark * k) - 5 + minValue*widthChart/(minValue + maxValue);
 							positiveRightValue.y = h - hostComponent.marginBottom + 2;
 							
 							positiveRightValue.setTextFormat(verticalFormat);
 							displayLabel.addChild(positiveRightValue);
 						}
-						for (k = 0; k <= numberLandMarkBelow; k++) {
+						for (k = 1; k <= numberLandMarkBelow; k++) {
 							var negativeLeftValue:TextField = new TextField();
-							negativeLeftValue.text = String(Math.ceil(minValue/numberLandMarkBelow * k));
-							negativeLeftValue.x = hostComponent.marginLeft - ((minValue*widthChart/(minValue + maxValue))/numberLandMarkBelow * k) - 3 + minValue*widthChart/(minValue + maxValue);
+							negativeLeftValue.text = "-" + String(Math.ceil(minValue/numberLandMarkBelow * k));
+							negativeLeftValue.x = hostComponent.marginLeft - ((minValue*widthChart/(minValue + maxValue))/numberLandMarkBelow * k) - 5 + minValue*widthChart/(minValue + maxValue);
 							negativeLeftValue.y = h - hostComponent.marginBottom + 2;
 							
 							negativeLeftValue.setTextFormat(verticalFormat);
@@ -258,7 +258,7 @@
 							
 							var bottomValue:TextField = new TextField();
 							bottomValue.text = String(Math.ceil(maxValue/numberLineLandMark * k));
-							bottomValue.x = hostComponent.marginLeft + (widthChart/numberLineLandMark * k) - 3;
+							bottomValue.x = hostComponent.marginLeft + (widthChart/numberLineLandMark * k) - 5;
 							bottomValue.y = h - hostComponent.marginBottom + 2;
 							
 							bottomValue.setTextFormat(verticalFormat);

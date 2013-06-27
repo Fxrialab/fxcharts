@@ -169,21 +169,23 @@ package fxrialab.controls.charts
 			
 			var p:Point = new Point(this.mouseX, this.mouseY);
 			p = this.globalToLocal(p);
-			//trace(this.mouseX);
-			//trace('px', p.x);
 			
-			tooltip.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth;
-			tooltip.y = data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom;
-			trace('tt.x', tooltip.x);
+			tooltip.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth/2;
+			tooltip.y = data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom - tooltip.height - 2;
+		//	tooltip.x = p.x - (txtFieldTooltip.textWidth + 8)/2;
+		//	tooltip.y = p.y - tooltip.height - 1;
+
 			this.stage.addChild(tooltip);
 			
-			this.addEventListener(MouseEvent.MOUSE_MOVE, moveTooltip, false, 0, true);
+			addEventListener(MouseEvent.MOUSE_MOVE, moveTooltip, false, 0, true);
 		}
 		
 		private function moveTooltip(evt:MouseEvent):void {
 			if (tooltip) {
-				tooltip.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth;
-				tooltip.y = data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom;
+				tooltip.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum + data.barWidth/2;
+				tooltip.y = data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom - tooltip.height - 2;
+		//		tooltip.x = evt.stageX - (txtFieldTooltip.textWidth + 8)/2;
+		//		tooltip.y = evt.stageY - tooltip.height - 1;
 			}
 		}
 		
