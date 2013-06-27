@@ -228,6 +228,8 @@ package fxrialab.controls.charts
 					bar.data.gapSum = _gap * i;
 					bar.data.width = w;
 					bar.data.height = h;
+					//	trace("width Component In Hbar: ", w);
+					//	trace("height Component In Hbar: ", h);
 					//trace('type of bar', seriesChartNumber);
 					bar.data.barWidth = (type == FxChart.CLUSTERED) ? barWidth/seriesChartNumber : barWidth;
 					bar.data.barWidthSum  = barWidth * i;
@@ -238,6 +240,8 @@ package fxrialab.controls.charts
 					
 					bar.data.minValue = minValue;
 					bar.data.maxValue = maxValue;
+					//trace("Max Value in HBar: ", maxValue);
+					bar.data.heightChart = h - (marginTop + marginBottom);
 					
 					bar.invalidateProperties();
 				}

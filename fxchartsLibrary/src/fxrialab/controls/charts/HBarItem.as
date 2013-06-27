@@ -29,14 +29,14 @@ package fxrialab.controls.charts
 			
 			if(data.minValue){
 				this.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum;
-				this.y = data.height - data.value - data.marginBottom - data.minValue;
+				this.y = data.height - (data.value*data.heightChart/(data.maxValue + data.minValue)) - data.marginBottom - (data.minValue*data.heightChart/(data.maxValue+data.minValue));
 				this.width = data.barWidth;
-				this.height = data.value;
+				this.height = data.value*data.heightChart/(data.maxValue+data.minValue);
 			}else {
 				this.x = data.marginLeft + data.offSet + data.gapSum + data.barWidthSum;
-				this.y =  data.height - data.value - data.marginBottom;
+				this.y =  data.height - (data.value*data.heightChart/data.maxValue) - data.marginBottom;
 				this.width = data.barWidth;
-				this.height = data.value;
+				this.height = data.value*data.heightChart/data.maxValue;
 			}
 		}
 	}
