@@ -7,7 +7,7 @@ package fxrialab.controls.charts
 		public function HBarItem()
 		{
 			super();
-		//	this.setStyle("skinClass", HBarItemSkin);
+			//this.setStyle("skinClass", HBarItemSkin);
 		}
 		
 		private var _data:Object;

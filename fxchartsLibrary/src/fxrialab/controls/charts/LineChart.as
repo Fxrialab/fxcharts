@@ -68,7 +68,7 @@ package fxrialab.controls.charts
 			
 			if(redrawSkin && skin && lineHolder){
 				redrawSkin = false;
-				if (lines.length > 0) {
+				/*if (lines.length > 0) {
 					for ( var i:int = 0; i < lines.length; i++) {
 						var line:Sprite = lines[i] as Sprite;
 						line.removeEventListener(MouseEvent.MOUSE_DOWN, handlerLineMouseEvents);
@@ -76,14 +76,23 @@ package fxrialab.controls.charts
 					}
 					lineHolder.removeChildren();
 				}
+				*/
+				if (lines.length > 0) 
+					lineHolder.removeChildren();
 				
 				lines = [];
-				for (i = 0; i < dataProvider.length; i++) {
-					var lsp:LineSprite = new LineSprite();
+				for (var i:int = 0; i < dataProvider.length; i++) {
+					/*var lsp:LineSprite = new LineSprite();
 					lsp.data = dataProvider.getItemAt(i);
 					
 					lsp.addEventListener(MouseEvent.MOUSE_DOWN, handlerLineMouseEvents, false, 0, true);
 					lsp.addEventListener(MouseEvent.ROLL_OVER, handlerLineMouseEvents, false, 0, true);
+					
+					lineHolder.addChild(lsp);
+					lines.push(lsp);*/
+					
+					var lsp:LineItem = new LineItem;
+					lsp.data = dataProvider.getItemAt(i);
 					
 					lineHolder.addChild(lsp);
 					lines.push(lsp);
@@ -104,7 +113,7 @@ package fxrialab.controls.charts
 			//var barHeight:Number;
 			for(var i:int=0; i < dataProvider.length; i++){	
 				//update data
-				var line:LineSprite = lines[i] as LineSprite;
+				/*var line:LineSprite = lines[i] as LineSprite;
 				line.data = dataProvider.getItemAt(i);
 				line.data.sumValue = sumValue;
 				
@@ -130,6 +139,46 @@ package fxrialab.controls.charts
 				line.data.font = getStyle('fontDefault');
 				line.data.size = getStyle('sizeDefault');
 				line.data.align = getStyle('leftAlign');
+				if (!line.data.stroke)
+					line.data.stroke = stroke;
+				
+				line.data.marginTop = marginTop;
+				line.data.marginBottom = marginBottom;
+				line.data.marginLeft = marginLeft;	
+				line.data.marginRight = marginRight;
+				
+				line.data.widthChart = w - (marginLeft + marginRight);
+				line.data.heightChart = h - (marginTop + marginBottom);
+				
+				line.data.valueField = valueField;
+				//determine direction for line based on coordinate axis
+				line.data.direction = direction;
+				//draw
+				line.draw();*/
+				
+				var line:LineItem = lines[i] as LineItem;
+				line.data = dataProvider.getItemAt(i);
+				line.data.sumValue = sumValue;
+				
+				line.data.offSet = _offSet;
+				
+				line.data.gap = _gap;
+				line.data.gapSum = _gap*i;
+				
+				line.data.width = w;
+				line.data.height = h;
+				line.data.maxValue = maxValue;
+				line.data.minValue = minValue;
+				
+				//barWidth = (w - (marginRight + marginLeft) - (_offSet *2 + _gap*(dataProvider.length - 1)))/dataProvider.length;
+				//barHeight = (h - (marginBottom + marginTop) - (_offSet * 2 + _gap * (dataProvider.length - 1))) / dataProvider.length;
+				
+				line.data.barWidth = barWidth;
+				line.data.barWidthSum = barWidth * i;
+				
+				line.data.barHeight = barHeight;
+				line.data.barHeightSum = barHeight*i;
+				
 				line.data.stroke = stroke;
 				
 				line.data.marginTop = marginTop;
@@ -144,7 +193,7 @@ package fxrialab.controls.charts
 				//determine direction for line based on coordinate axis
 				line.data.direction = direction;
 				//draw
-				line.draw();
+				line.invalidateProperties();
 			}
 		}
 		

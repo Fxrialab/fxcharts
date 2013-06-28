@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("fxrialab.controls.charts.LineItem")]
+	</fx:Metadata>
+
+	<s:Group id="bar"  width="10" height="10"  x="-5" y="-5" toolTip="{hostComponent.data.value}"/>
+	<s:Ellipse width="10" height="10" x="-5" y="-5">
+		<s:fill>
+			<s:SolidColor color="{hostComponent.data.stroke}" alpha=".3"/>
+		</s:fill>
+	</s:Ellipse>
+</s:Skin>
