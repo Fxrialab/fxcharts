@@ -228,12 +228,38 @@ package fxrialab.controls.charts
 					}
 					//set number point for line
 					var lineChartDefault:Number = numLength;
+					//set orientation for axis layout
+					var orientation:String = "horizontal";
+					if (chartFirstType == HORIZONTAL_BAR)
+					{
+						//draw hor axis
+						orientation = "horizontal";
+					}
+					else if (chartFirstType == VERTICAL_BAR)
+					{
+						//draw ver axis
+						orientation = "vertical";
+					}
+					else if (chartFirstType == LINE)
+					{
+						//check for next chart type
+						if (chartType == HORIZONTAL_BAR)
+						{
+							orientation == "horizontal";
+						}
+						else if (chartType == VERTICAL_BAR)
+						{
+							orientation == "vertical";
+						}
+					}
+					numberLineLandMarkDefault = (orientation == 'horizontal') ? Math.ceil(height/40) : Math.ceil(width/80);
+					
 					//get min vs max value
 					if (positiveValueArrays && positiveValueArrays.length > 0) {
 						var getMaxValue:Number = (typeOfBar == STACKED) ? ArrayUtilities.findMax(sumValueStackedBar) : ArrayUtilities.findMax(positiveValueArrays);
-						maxValue = getMaxValue + 30;
+						maxValue = getMaxValue + 20;
 					}
-					if (maxValue < 50) numberLineLandMarkDefault = 5;
+					
 					if (negativeValueArrays && negativeValueArrays.length > 0) {
 						var getMinValue:Number = ArrayUtilities.findMin(negativeValueArrays);
 						var getNumberLandMark:Number = -getMinValue/(maxValue/numberLineLandMarkDefault);
@@ -250,30 +276,6 @@ package fxrialab.controls.charts
 							showCoordinate = true;
 							if (showCoordinate)
 							{
-								var orientation:String = "horizontal";
-								if (chartFirstType == HORIZONTAL_BAR)
-								{
-									//draw hor axis
-									orientation = "horizontal";
-								}
-								else if (chartFirstType == VERTICAL_BAR)
-								{
-									//draw ver axis
-									orientation = "vertical";
-								}
-								else if (chartFirstType == LINE)
-								{
-									//check for next chart type
-									if (chartType == HORIZONTAL_BAR)
-									{
-										orientation == "horizontal";
-									}
-									else if (chartType == VERTICAL_BAR)
-									{
-										orientation == "vertical";
-									}
-								}
-								
 								if (redrawSkin)
 								{
 									var clazz:Class = getStyle('coordinateClass') as Class;
