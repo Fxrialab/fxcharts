@@ -15,7 +15,8 @@ package fxrialab.controls.charts.legend
 	import spark.layouts.HorizontalLayout;
 	import spark.layouts.VerticalLayout;
 	
-	public class FxLegend extends UIComponent implements IDataRenderer
+	[Style(name="fxLegendClass", inherit="no", type="Class")]
+	public class FxLegend extends UIComponent
 	{
 		public static const HORIZONTAL_BAR:String = 'horizontalBar';
 		public static const VERTICAL_BAR:String = 'verticalBar';
@@ -36,10 +37,15 @@ package fxrialab.controls.charts.legend
 		private var _gap:Number = 5;
 		private var _checkFill:Boolean;
 		private var redrawSkin:Boolean = false;
+		private var fxLegend:DisplayObject;
+		private var legend:Array = [];
+		private var numberSeries:Array = [];
+		private var numberDefaultItems:Number;
 		
 		public function FxLegend()
 		{
 			super();
+			setStyle("fxLegendClass", FxLegendLayout);
 		}
 		
 		private var _dataProvider:IList;
@@ -102,92 +108,19 @@ package fxrialab.controls.charts.legend
 			for(var j:int=0; j < dataProvider.length; j++){
 				dataSeries = dataProvider.getItemAt(j);
 				var chartTypes:String = String(dataSeries[typeField]);
-				var dataItem:IList = new ArrayList(dataSeries[dataSeriesField] as Array);
+				var dataItems:IList = new ArrayList(dataSeries[dataSeriesField] as Array);
 				var chartFirstItem:Object = dataProvider.getItemAt(0);
 				var firstType:String = String(chartFirstItem[typeField]);
 				var firstDataItems:IList = new ArrayList(chartFirstItem[dataSeriesField] as Array);
 				
-				var itemUI:Sprite;
-				switch(firstType)
-				{
-					case HORIZONTAL_BAR:
-						if(chartTypes == HORIZONTAL_BAR || chartTypes == LINE) {
-							if(firstDataItems.length == dataItem.length) {
-								itemUI = itemRenderer.newInstance() as Sprite;
-								if (redrawSkin)
-								{
-									redrawSkin = false;
-									itemUI.removeChildren();
-								}
-								if(itemUI){
-									if(itemUI.hasOwnProperty('data')){
-										itemUI['data'] = dataSeries;
-									}
-									addChild(itemUI);
-								}
-							}
-						}
-						break;
-					case VERTICAL_BAR:
-						if (chartTypes == VERTICAL_BAR || chartTypes == LINE) {
-							if(firstDataItems.length == dataItem.length) {
-								itemUI = itemRenderer.newInstance() as Sprite;
-								if(itemUI){
-									if(itemUI.hasOwnProperty('data')){
-										itemUI['data'] = dataSeries;
-									}
-									addChild(itemUI);
-								}
-							}
-						}
-						break;
-					case LINE:
-						if (chartTypes == VERTICAL_BAR || chartTypes == LINE || chartTypes == HORIZONTAL_BAR) {
-							if(firstDataItems.length == dataItem.length) {
-								itemUI = itemRenderer.newInstance() as Sprite;
-								if(itemUI){
-									if(itemUI.hasOwnProperty('data')){
-										itemUI['data'] = dataSeries;
-									}
-									addChild(itemUI);
-								}
-							}
-						}
-						break;
-					case PIE:
-						//@TODO: check with condition by chart types as pie, similar with doughnut
-						if (chartTypes == PIE) {
-							for (var i:int=0; i < dataItem.length; i++) {
-								data = dataItem.getItemAt(i);
-								data.type = firstType;
-								
-								itemUI = itemRenderer.newInstance() as Sprite;
-								if(itemUI){
-									if(itemUI.hasOwnProperty('data')){
-										itemUI['data'] = data;
-									}
-									addChild(itemUI);
-								}
-							}
-						}
-						break;
-					case DOUGHNUT:
-						if (chartTypes == DOUGHNUT) {
-							for (i=0; i < dataItem.length; i++) {
-								data = dataItem.getItemAt(i);
-								data.type = firstType;
-								
-								itemUI = itemRenderer.newInstance() as Sprite;
-								if(itemUI){
-									if(itemUI.hasOwnProperty('data')){
-										itemUI['data'] = data;
-									}
-									addChild(itemUI);
-								}
-							}
-						}
-						break;
-				}
+				if (firstType == HORIZONTAL_BAR || firstType == VERTICAL_BAR || firstType == LINE)
+					numberDefaultItems = dataItems.length;
+				
+				if (chartTypes == HORIZONTAL_BAR && numberDefaultItems == dataItems.length)
+					numberSeries.push(HORIZONTAL_BAR);
+				else if (chartTypes == VERTICAL_BAR && numberDefaultItems == dataItems.length)
+					numberSeries.push(VERTICAL_BAR);
+				
 			}
 		}		
 		
@@ -195,13 +128,71 @@ package fxrialab.controls.charts.legend
 		{
 			super.commitProperties();
 			
-			//this.removeChildren();
-			
-			for (var i:int=0; i < numChildren; i++) {
-				var legend:Sprite = getChildAt(i) as Sprite;
-				
-				legend.addEventListener(MouseEvent.MOUSE_DOWN, handlerLegendMouseEvent);
-				legend.addEventListener(MouseEvent.MOUSE_UP, handlerLegendMouseEvent);
+			if(redrawSkin && dataProvider)
+			{
+				for( var i:int=0; i < dataProvider.length; i++)
+				{
+					var dataSeries:Object 	= dataProvider.getItemAt(i);
+					
+					var chartTypes:String 	= String(dataSeries[typeField]);
+					var dataItems:IList 	= new ArrayList(dataSeries[dataSeriesField] as Array);
+					var chartFirstItem:Object 	= dataProvider.getItemAt(0);
+					var firstType:String 	= String(chartFirstItem[typeField]);
+					var firstDataItems:IList 	= new ArrayList(chartFirstItem[dataSeriesField] as Array);
+			//		var getFill:String 		= (dataSeries[fillField] == null) ? "0xDC2400" : dataSeries[fillField];
+			//		var fill:uint 			= (getFill.search('#') == 0) ? uint(getFill.replace('#', '0x')) : uint(getFill);
+			//		var legendLabels 		= String(dataSeries[labelField]);
+					
+					var clazz:Class = getStyle('fxLegendClass') as Class;
+					fxLegend = new clazz() as DisplayObject;
+					
+					if(dataProvider)
+					{
+						//@TODO: temp for display legend
+						trace("number series: ", numberSeries.length);
+						if (firstType == PIE)
+							fxLegend['dataProvider'] = dataItems;
+						else
+							fxLegend['dataProvider'] = dataProvider;
+					}
+					fxLegend['orientation'] = orientation;
+					
+					//check chart type for display legends
+					switch(firstType)
+					{
+						case HORIZONTAL_BAR:
+							if(chartTypes == HORIZONTAL_BAR || chartTypes == LINE) {
+								if(numberSeries.length > 1 && dataProvider.getItemAt(0).hasOwnProperty(labelField))
+									addChild(fxLegend);
+							}
+							break;
+						case VERTICAL_BAR:
+							if (chartTypes == VERTICAL_BAR || chartTypes == LINE) {
+								if(numberSeries.length > 1 && dataProvider.getItemAt(0).hasOwnProperty(labelField))
+									addChild(fxLegend);
+							}
+							break;
+						case LINE:
+							if (chartTypes == VERTICAL_BAR || chartTypes == LINE || chartTypes == HORIZONTAL_BAR) {
+								if(numberSeries.length > 1 && dataProvider.getItemAt(0).hasOwnProperty(labelField))
+									addChild(fxLegend);
+							}
+							break;
+						case PIE:
+							if (chartTypes == PIE) {
+								if(dataItems && dataItems.length > 1 && dataItems.getItemAt(0).hasOwnProperty(labelField))
+									addChild(fxLegend);
+							}
+							break;
+						case DOUGHNUT:
+							if (chartTypes == DOUGHNUT) {
+								if(dataItems && dataItems.length > 1 && dataItems.getItemAt(0).hasOwnProperty(labelField))
+									addChild(fxLegend);
+							}
+							break;
+					}
+					
+				}
 			}
 		}
 		
@@ -210,27 +201,10 @@ package fxrialab.controls.charts.legend
 			// TODO Auto Generated method stub
 			super.updateDisplayList(w, h);
 			
-			var cx:Number = 0;
-			var cy:Number = 0;
-			//var child:Sprite;
-			switch(orientation){
-				case VERTICAL_LAYOUT:
-					trace('numChild:', numChildren);
-					for(var i:int=0 ; i < numChildren; i++){
-						var child1:Sprite = getChildAt(i) as Sprite;
-						child1.x = cx;
-						child1.y = cy;
-						cy += child1.height + gap;//+gap
-					}
-					break;
-				case HORIZONTAL_LAYOUT:
-					for(var j:int=0 ; j < numChildren; j++){
-						var child:Sprite = getChildAt(j) as Sprite;
-						child.x = cx;
-						child.y = cy;
-						cx += child.width + gap;//+gap
-					}
-					break;
+			if(fxLegend)
+			{
+				fxLegend.width = w;
+				fxLegend.height = h;
 			}
 		}
 		

@@ -15,7 +15,6 @@
     <classEntry path="fxrialab.utils.DrawHelper"/>
     <classEntry path="fxrialab.controls.charts.HBarChart"/>
     <classEntry path="fxrialab.controls.charts.CoordinateAxis"/>
-    <classEntry path="fxrialab.controls.charts.HBarSprite"/>
     <classEntry path="fxrialab.controls.charts.LineChartSkin"/>
     <classEntry path="fxrialab.controls.charts.FxChart"/>
     <classEntry path="fxrialab.controls.charts.PieSprite"/>
@@ -24,6 +23,8 @@
     <classEntry path="fxrialab.utils.ArrayUtilities"/>
     <classEntry path="fxrialab.controls.charts.HBarStackedSprite"/>
     <classEntry path="fxrialab.controls.charts.VBarStackedSprite"/>
+    <classEntry path="fxrialab.controls.charts.legend.FxLegendHorizontalLayout"/>
+    <classEntry path="fxrialab.controls.charts.legend.FxLegendHorizontalLayoutSkin"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

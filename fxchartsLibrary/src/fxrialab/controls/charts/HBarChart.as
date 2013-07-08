@@ -122,6 +122,7 @@ package fxrialab.controls.charts
 						
 						var hbsp:HBarItem = new HBarItem;
 						hbsp.data = dataProvider.getItemAt(i);
+						hbsp.data.fill = fill;
 						
 						hBarHolder.addChild(hbsp);
 						hBars.push(hbsp);
@@ -220,7 +221,7 @@ package fxrialab.controls.charts
 					bar.data.font = getStyle('fontDefault');
 					bar.data.size = getStyle('sizeDefault');
 					bar.data.align = getStyle('alignDefault');
-					if (!bar.data.fill)
+				//	if (!bar.data.fill)
 						bar.data.fill = fill;
 					
 					bar.data.offSet = _offSet;
